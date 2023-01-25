@@ -1,7 +1,32 @@
 const express = require('express');
 
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
+
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'password',
+  database : 'hello_world'
+});
+
+
+app.get('/', (req, res) => {
+  connection.connect();
+
+  connection.query('SELECT * from persons', function (error, results, fields) {
+    if (error) {
+      connection.end();
+      throw error
+    };
+    console.log('The solution is: ', results[0]);
+
+    res.send(results[0]);
+  });
+
+  connection.end();
+});
 
 app.listen(PORT, (error) =>{
 	if(!error)
@@ -10,22 +35,3 @@ app.listen(PORT, (error) =>{
 		console.log("Error occurred, server can't start", error);
 	}
 );
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'me',
-  password : 'secret',
-  database : 'my_db'
-});
-
-connection.connect();
-
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', results[0].solution);
-});
-
-connection.end();
-
-
-
