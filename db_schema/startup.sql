@@ -1,6 +1,6 @@
 CREATE DATABASE hello_world;
 
-CREATE TABLE Persons (
+CREATE TABLE persons (
     PersonID int,
     LastName varchar(255),
     FirstName varchar(255),
