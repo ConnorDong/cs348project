@@ -3,14 +3,13 @@ const express = require('express');
 const app = express();
 const PORT = 5000;
 
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
   password : 'password',
   database : 'hello_world'
 });
-
 
 app.get('/', (req, res) => {
   connection.connect();
