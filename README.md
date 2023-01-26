@@ -7,6 +7,7 @@
 First time:
 
 ```
+run startup.sql in mysql
 cd server
 npm install
 ```
