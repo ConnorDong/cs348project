@@ -6,16 +6,21 @@
 
 First time:
 
+Run the contents of `/server/startup.sql` in MySQL to initialize the database.
+
 ```
-run startup.sql in mysql
 cd server
 npm install
 ```
 
 Create a `.env` file in the `server` directory with the following contents:
-`DB_PASSWORD=your_password`
 
-Run:
+```
+DB_USER=your_username
+DB_PASSWORD=your_password
+```
+
+Run the server:
 `node ./index.js`
 
 ## Frontend/Client
@@ -27,5 +32,5 @@ cd client
 npm install
 ```
 
-Run:
+Run the client:
 `npm run dev`
