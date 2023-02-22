@@ -7,5 +7,5 @@ CREATE TABLE persons (
     Address varchar(255),
     City varchar(255)
 );
-Insert into persons values (1, 'Dong', 'Connor', 'Fergus', 'Waterloo')
+Insert into persons values (1, 'Dong', 'Connor', 'Fergus', 'Waterloo');
 SELECT * FROM hello_world.persons;
