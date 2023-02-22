@@ -1,11 +1,11 @@
 CREATE DATABASE hello_world;
 
-CREATE TABLE persons (
+CREATE TABLE hello_world.persons (
     PersonID int,
     LastName varchar(255),
     FirstName varchar(255),
     Address varchar(255),
     City varchar(255)
 );
-Insert into persons values (1, 'Dong', 'Connor', 'Fergus', 'Waterloo');
-SELECT * FROM hello_world.persons;
+
+INSERT INTO hello_world.persons VALUES (1, 'Dong', 'Connor', 'Fergus', 'Waterloo');

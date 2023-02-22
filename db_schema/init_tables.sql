@@ -1,13 +1,13 @@
+-- NOTE: Please replace all occurrences of "/MY/ABSOLUTE/PATH/TO/" path in the LOCAL INFILE commands to the absolute path to the data/processed directory on your system.
+-- There is no way in MySQL to do a variable path so you must hardcode the path (https://stackoverflow.com/a/41359626)
 
 drop database db;
 create database db;
 use db;
 
-
+-- need to set this or else you get this error
+-- https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client
 SET GLOBAL local_infile=1;
-
-   
-SHOW GLOBAL VARIABLES LIKE 'local_infile';
 
 
 -- TitleRatings
@@ -17,7 +17,7 @@ create table TitleRatings (
     numVotes numeric
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/titleRatings.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/titleRatings.tsv' 
     INTO TABLE TitleRatings
     IGNORE 1 LINES;
 select * from TitleRatings;
@@ -30,7 +30,7 @@ create table NameBasics (
     deathYear integer
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/nameBasics.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/nameBasics.tsv' 
     INTO TABLE NameBasics
     IGNORE 1 LINES;
     
@@ -41,7 +41,7 @@ create table Professions (
 	profession text
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/professions.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/professions.tsv' 
     INTO TABLE Professions
     IGNORE 1 LINES;
 
@@ -52,7 +52,7 @@ create table KnownFor (
     primary key (nconst, tconst)
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/knownFor.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/knownFor.tsv' 
     INTO TABLE KnownFor
     IGNORE 1 LINES;
 
@@ -68,11 +68,9 @@ create table TitleBasics (
     runtimeMinutes numeric
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/titleBasics.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/titleBasics.tsv' 
     INTO TABLE TitleBasics
     IGNORE 1 LINES;
-    
-select * from TitleBasics;
 -- 
 
 
@@ -83,13 +81,11 @@ create table Genres (
     primary key (tconst, genre)
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/genres.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/genres.tsv' 
     INTO TABLE Genres
     IGNORE 1 LINES;
-    
-select * from Genres;
 
--- Genres
+-- Portrays
 create table Portrays (
 	tconst varchar(255),
     nconst varchar(255),
@@ -97,7 +93,7 @@ create table Portrays (
     primary key (tconst, nconst, portray)
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/characters.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/characters.tsv' 
     INTO TABLE Portrays
     IGNORE 1 LINES;
     
@@ -112,7 +108,7 @@ create table TitlePrincipals (
     primary key (tconst, nconst)
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/titlePrincipals.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/titlePrincipals.tsv' 
     INTO TABLE TitlePrincipals
     IGNORE 1 LINES;
     
@@ -125,21 +121,21 @@ create table Directors (
     primary key (tconst, nconst)
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/directors.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/directors.tsv' 
     INTO TABLE Directors
     IGNORE 1 LINES;
     
 select * from Directors;
 -- 
 
--- Genres
+-- Writers
 create table Writers (
 	tconst varchar(255),
     nconst varchar(255),
     primary key (tconst, nconst)
 );
 LOAD DATA 
-	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/writers.tsv' 
+	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/writers.tsv' 
     INTO TABLE Writers
     IGNORE 1 LINES;
 

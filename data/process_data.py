@@ -77,7 +77,6 @@ class ProcessData:
         genres.fillna("\\N")
         titleBasics.fillna("\\N")
 
-        print("Done")
         print(titleBasics.head())
 
         titleBasics.to_csv("processed/titleBasics.tsv", sep='\t', index=False, na_rep='\\N')
@@ -127,7 +126,6 @@ class ProcessData:
             na_values="\\N")
         # titlePrincipals['characters']  = splitColumnToList(titlePrincipals, 'characters')
         print(titlePrincipals.head())
-        print("HI")
 
         characters = titlePrincipals[['tconst', 'nconst', 'characters']].explode('characters').dropna()
         titlePrincipals = titlePrincipals.drop(columns=['characters'])
