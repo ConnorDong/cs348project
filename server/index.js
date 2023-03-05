@@ -64,7 +64,7 @@ app.post("/followers/follow", (req, res) => {
 
 // unfollow a user
 app.post("/followers/unfollow", (req, res) => {
-  // FollowController.deleteFollower(req, res, connection)
+  FollowController.deleteFollower(req, res, connection)
 })
 
 // get follower list
