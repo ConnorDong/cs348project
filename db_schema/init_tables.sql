@@ -73,7 +73,6 @@ LOAD DATA
     IGNORE 1 LINES;
 -- 
 
-
 -- Genres
 create table Genres (
 	tconst varchar(255),
@@ -138,6 +137,41 @@ LOAD DATA
 	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/writers.tsv' 
     INTO TABLE Writers
     IGNORE 1 LINES;
+
+-- User table
+create table Users (
+    userId varchar(255) primary key,
+    username varchar(255),
+    email varchar(255),
+    password varchar(255)
+);
+-- Define a trigger to return the userId after insertion into Users
+CREATE TRIGGER ai_Users
+AFTER INSERT ON Users
+FOR EACH ROW
+SET @last_uuid = NEW.userId;
+
+
+-- User review table
+create table UserReview (
+	reviewId varchar(255) primary key,
+    userId varchar(255) not null,
+    tconst varchar(255) not null,
+    rating float check (rating between 0.0 and 10.0),
+    description text,
+    foreign key (userId) references Users(userId),
+	foreign key (tconst) references TitleBasics(tconst)
+);
+
+create table UserFollows (
+    userId varchar(255) not null,
+    followsUserId varchar(255) not null,
+    primary key (userId, followsUserId),
+    foreign key (userId) references Users(userId),
+    foreign key (followsUserId) references Users(userId),
+    -- users cannot follow themselves
+    constraint columns_cannot_equal check (userId <> followsUserId)
+);
 
 show tables;
 
