@@ -30,7 +30,10 @@ The processed data will be in the `./processed` directory.
 
 First time:
 
-Run the contents of `/server/init_tables.sql` in MySQL to initialize the database. This create tables and load the IMDB data from `data/processed` into SQL tables. 
+Run the contents of `/dbschema/init_tables.sql` in MySQL to initialize the database. This create tables and load the IMDB data from `data/processed` into SQL tables. 
+
+To use sample data instead, run `/dbschema/create_tables.sql` andthen `/dbschema/startup.sql`
+
 
 ```
 cd server
