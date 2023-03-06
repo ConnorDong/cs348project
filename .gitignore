@@ -26,4 +26,4 @@ yarn-error.log*
 data/processed
 data/raw
 
-my_init_tables.sql
+db_schema/my_init_tables.sql
