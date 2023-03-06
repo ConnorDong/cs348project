@@ -21,7 +21,6 @@ exports.register = function(req, res, connection) {
       res.status(400)
       res.send(JSON.stringify(error))
       return;
-
     }
 
     // The sql query has 4 statements
