@@ -6,18 +6,17 @@ var cors = require("cors");
 var ReviewController = require("./controllers/userReviewController")
 var UserController = require("./controllers/userController")
 var FollowController = require("./controllers/userFollowsController")
+var MovieController = require("./controllers/movieController")
 var TitleController = require("./controllers/titleController")
 var GenresController = require("./controllers/genresController")
 var TitlesSql = require("./sql/titlesSql")
 
-const PORT = 5000;
+const PORT = 5001;
 
 const app = express();
 app.use(cors({ credentials: true, origin: "http://localhost:5000" }));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-const PORT = 5001;
 
 var conf = {
   host: "localhost",
@@ -94,6 +93,10 @@ app.post("/review", (req, res) => {
   ReviewController.createReview(req, res, connection)
 })
 
+app.post("/review/delete", (req, res) => {
+  ReviewController.deleteReview(req, res, connection)
+})
+
 // Followers ------------------------------------------------------------------
 // follow a user
 app.post("/followers/follow", (req, res) => {
@@ -108,6 +111,10 @@ app.post("/followers/unfollow", (req, res) => {
 // get follower list
 app.get("/followers/get/:userId", (req, res) => {
   FollowController.getFollowerList(req, res, connection)
+})
+
+app.get("/movies", (req, res) => {
+  MovieController.getMovies(req, res, connection)
 })
 
 app.listen(PORT, (error) => {

@@ -14,6 +14,14 @@ select * from UserReview
 `
 
 exports.createReview = `
-insert into UserReview
-values (uuid(), ?, ?, ?, ?)
+START TRANSACTION;
+    insert into UserReview
+    values (uuid(), ?, ?, ?, ?);
+    select @last_uuid as reviewId;
+COMMIT;
+`
+
+exports.deleteReview = `
+delete from UserReview
+    where reviewId=? 
 `
