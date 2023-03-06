@@ -9,8 +9,8 @@ exports.getPrincipalsByTconst = `
 
 // Get all characters of a title and who plays them
 exports.getPortrayalsByTconst = `
-    select * from Portrays as p
+    select nconst as nameId, portray as portrays, primaryName as actorName, birthYear, deathYear from Portrays as p
     left join NameBasics as nb
-    on p.nconst=nb.nconst
+    using(nconst)
     where tconst=?
 `

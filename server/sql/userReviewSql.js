@@ -9,7 +9,8 @@ select * from UserReview
 `
 // Get all reviews made by a title
 exports.getByTconst = `
-select * from UserReview
+select reviewId, username, Round(rating, 1) as rating, description as comment from UserReview
+    natural inner join Users
     where tconst=?    
 `
 
