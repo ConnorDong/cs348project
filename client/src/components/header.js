@@ -25,7 +25,7 @@ export default function CustomHeader() {
   }, [router.asPath]);
 
   return (
-    <Box pos="fixed" top="0" w="100%">
+    <Box pos="fixed" top="0" w="100%" sx={{ zIndex: "2" }}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <Link href="/" style={{ textDecoration: "none" }}>

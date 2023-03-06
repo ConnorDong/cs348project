@@ -1,5 +1,5 @@
 .container {
-  padding: 1.5rem 30rem;
+  padding: 1.5rem 20rem;
   min-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -27,6 +27,17 @@
   font-size: 2.8rem;
 }
 
-.description {
+.year {
   font-size: 1.5rem;
+}
+
+.description {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.secondarytitle {
+  margin: 1rem 0rem;
+  font-size: 2.3rem;
+  font-weight: 500;
 }

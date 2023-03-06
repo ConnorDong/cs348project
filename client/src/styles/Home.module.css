@@ -14,9 +14,14 @@
 }
 
 .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   line-height: 1.15;
   font-size: 4rem;
+  font-weight: 600;
+  gap: 5px;
 }
 
 .title,
