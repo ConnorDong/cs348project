@@ -72,9 +72,10 @@ export default function Authenticate(props) {
       </Head>
 
       <main className={styles.main}>
-        <Paper radius="md" p="xl" withBorder {...props}>
+        <Paper radius="md" p="xl" w={400} withBorder {...props}>
           <Text size="xl" weight={500}>
-            {upperFirst(type)} to our Movie Database!
+            {/* Login to MovieDB! / Register for MovieDB! */}
+            {upperFirst(type)} {type == "login" ? "to" : "for"} MovieDB!
           </Text>
           <Space h="md" />
           <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
