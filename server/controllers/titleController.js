@@ -155,3 +155,30 @@ exports.getAllHighestRated = function(req, res, connection) {
     }));
   });
 }
+
+exports.getMovies = function(req, res, connection) {
+    connection.query(TitlesSql.retrieveMovies, [], function (error, results, fields) {
+      if (error) {
+        res.status(400)
+        res.send(JSON.stringify(error))
+        return;
+  
+      }
+      res.send(JSON.stringify({
+        "movies": results
+      }));
+    })
+}
+
+exports.getMovieDetails = async function(req, res, connectionPromise) {
+    let data = req.body;
+    const connection = await connectionPromise
+    const [info, fields1] = await connection.execute(TitlesSql.getDetailedTitleInfo, [data.titleId]);
+    const [portrayals, fields2] = await connection.execute(PrincipalsSql.getPortrayalsByTconst, [data.titleId]);
+    const [reviews, fields3] = await connection.execute(UserReviewSql.getByTconst, [data.titleId]);
+    const titleInfo = info[0]
+    titleInfo['portrayals'] = portrayals
+    titleInfo['reviews'] = reviews
+    titleInfo.reviews 
+    res.send(JSON.stringify(titleInfo))
+}

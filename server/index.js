@@ -6,7 +6,6 @@ var cors = require("cors");
 var ReviewController = require("./controllers/userReviewController")
 var UserController = require("./controllers/userController")
 var FollowController = require("./controllers/userFollowsController")
-var MovieController = require("./controllers/movieController")
 var TitleController = require("./controllers/titleController")
 var GenresController = require("./controllers/genresController")
 var TitlesSql = require("./sql/titlesSql")
@@ -114,7 +113,11 @@ app.get("/followers/get/:userId", (req, res) => {
 })
 
 app.get("/movies", (req, res) => {
-  MovieController.getMovies(req, res, connection)
+  TitleController.getMovies(req, res, connection)
+})
+
+app.post("/movie/details", (req, res) => {
+  TitleController.getMovieDetails(req, res, connectionPromise)
 })
 
 app.listen(PORT, (error) => {

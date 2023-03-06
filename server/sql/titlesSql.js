@@ -26,3 +26,49 @@ select * from TitleBasics as t
     on t.tconst=tr.tconst
     where tr.tconst=?;
 `
+
+exports.getDetailedTitleInfo = `
+select TitleBasics.tconst as titleId,
+TitleBasics.primaryTitle as title,
+TitleBasics.startYear as year,
+TitleBasics.isAdult as adult,
+TitleRatings.averageRating as ratings,
+TitleRatings.numVotes as voteCount,
+(Select GROUP_CONCAT(genre SEPARATOR ', ') from Genres
+ where Genres.tconst = titleId
+ group by tconst
+ ) as genre,
+(Select GROUP_CONCAT(primaryName SEPARATOR ', ') from Directors
+natural inner join NameBasics
+where Directors.tconst = titleId
+group by tconst
+) as directors,
+(Select GROUP_CONCAT(primaryName SEPARATOR ', ') from Writers
+natural inner join NameBasics
+where Writers.tconst = titleId
+group by tconst
+) as writers,
+(Select GROUP_CONCAT(primaryName SEPARATOR ', ') from TitlePrincipals
+natural inner join NameBasics
+where TitlePrincipals.tconst = titleId
+group by tconst
+) as principals
+from TitleBasics
+natural inner join TitleRatings
+where TitleBasics.tconst=?
+`
+
+exports.retrieveMovies = `
+select TitleBasics.tconst as titleId,
+TitleBasics.primaryTitle as title,
+TitleBasics.startYear as year,
+TitleBasics.isAdult as adult,
+TitleRatings.averageRating as ratings,
+TitleRatings.numVotes as voteCount,
+(Select GROUP_CONCAT(genre SEPARATOR ', ') from Genres
+ where Genres.tconst = titleId
+ group by tconst
+ ) as genre
+ from TitleBasics
+natural inner join TitleRatings
+`
