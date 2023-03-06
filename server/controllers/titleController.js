@@ -92,7 +92,7 @@ exports.getInfo = async function(req, res, connectionPromise) {
   // Get all writers associated with the title
   const [writers, fields4] = await connection.execute(WritersDirectorsSql.getWritersByTconst, [tconst]);
   // Get all principals associated with the title
-  const [principals, fields5] = await connection.execute(PrincipalsSql.getPrincipalsByTconst, [tconst]);
+  //const [principals, fields5] = await connection.execute(PrincipalsSql.getPrincipalsByTconst, [tconst]);
   // Get all characters played by actors
   const [portrayals, fields6] = await connection.execute(PrincipalsSql.getPortrayalsByTconst, [tconst]);
   // Get all user reviews associated with the title
@@ -102,7 +102,7 @@ exports.getInfo = async function(req, res, connectionPromise) {
   titleInfo['directors'] = directors
   titleInfo['writers'] = writers
   titleInfo['portrayals'] = portrayals
-  titleInfo['principals'] = principals
+  //titleInfo['principals'] = principals
   titleInfo['reviews'] = reviews
   res.send(JSON.stringify({
     "message": `Successfully retrieved info for title ${tconst}`,
@@ -173,6 +173,7 @@ exports.getMovies = function(req, res, connection) {
 exports.getMovieDetails = async function(req, res, connectionPromise) {
     let data = req.body;
     const connection = await connectionPromise
+    console.log(data.titleId)
     const [info, fields1] = await connection.execute(TitlesSql.getDetailedTitleInfo, [data.titleId]);
     const [portrayals, fields2] = await connection.execute(PrincipalsSql.getPortrayalsByTconst, [data.titleId]);
     const [reviews, fields3] = await connection.execute(UserReviewSql.getByTconst, [data.titleId]);

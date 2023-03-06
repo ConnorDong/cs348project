@@ -47,12 +47,7 @@ group by tconst
 natural inner join NameBasics
 where Writers.tconst = titleId
 group by tconst
-) as writers,
-(Select GROUP_CONCAT(primaryName SEPARATOR ', ') from TitlePrincipals
-natural inner join NameBasics
-where TitlePrincipals.tconst = titleId
-group by tconst
-) as principals
+) as writers
 from TitleBasics
 natural inner join TitleRatings
 where TitleBasics.tconst=?
