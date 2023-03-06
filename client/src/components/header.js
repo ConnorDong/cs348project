@@ -1,29 +1,21 @@
 import {
-  createStyles,
   Header,
-  HoverCard,
   Group,
   Button,
-  UnstyledButton,
   Text,
-  SimpleGrid,
-  ThemeIcon,
-  Anchor,
-  Divider,
-  Center,
   Box,
-  Burger,
-  Drawer,
-  Collapse,
-  ScrollArea,
-  rem,
+  useMantineColorScheme,
+  ActionIcon,
 } from "@mantine/core";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Sun, MoonStars } from "tabler-icons-react";
 import styles from "../styles/Header.module.css";
 
 export default function CustomHeader() {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
   // Check if we're already authenticated (useEffect since Window object is not available during SSR)
   const router = useRouter();
   const [authToken, setAuthToken] = useState(null);
@@ -69,7 +61,27 @@ export default function CustomHeader() {
           </Button.Group>
 
           <Group>
-            {authToken && (
+            <ActionIcon
+              onClick={() => toggleColorScheme()}
+              size="lg"
+              sx={(theme) => ({
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[6]
+                    : theme.colors.gray[0],
+                color:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.yellow[4]
+                    : theme.colors.blue[6],
+              })}
+            >
+              {colorScheme === "dark" ? (
+                <Sun size="1.2rem" />
+              ) : (
+                <MoonStars size="1.2rem" />
+              )}
+            </ActionIcon>
+            {authToken ? (
               <Button
                 variant="default"
                 onClick={() => {
@@ -80,8 +92,7 @@ export default function CustomHeader() {
               >
                 Log out
               </Button>
-            )}
-            {!authToken && (
+            ) : (
               <Link href="/authenticate">
                 <Button>Login/Register</Button>
               </Link>

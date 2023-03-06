@@ -7,7 +7,7 @@ export default function Home() {
     <div className={styles.container}>
       <main className={styles.main}>
         <div>
-          <h1 className={styles.title}>CS348: MovieDB</h1>
+          <h1 className={styles.title}>MovieDB</h1>
           <p className={styles.description}>
             A comprehensive movie database with users, reviews, and real movies.
             Built on the IMDB dataset.

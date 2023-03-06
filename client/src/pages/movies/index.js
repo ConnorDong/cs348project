@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Movies.module.css";
-import { Flex, Button } from "@mantine/core";
+import { Flex, Button, Paper, Text } from "@mantine/core";
 
 export default function Home() {
   const [data, setData] = useState("");
@@ -21,7 +21,19 @@ export default function Home() {
           A directory of all movies in MovieDB.
         </p>
       </div>
-      <div className={styles.movieCard}>Lol</div>
+      <Paper
+        shadow="sm"
+        radius="md"
+        p="md"
+        className={styles.movieContainer}
+        withBorder
+      >
+        <Text>Paper is the most basic ui component</Text>
+        <Text>
+          Use it to create cards, dropdowns, modals and other components that
+          require background with shadow
+        </Text>
+      </Paper>
     </div>
   );
 }

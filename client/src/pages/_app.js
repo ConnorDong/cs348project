@@ -1,10 +1,25 @@
+import { useState } from "react";
 import Head from "next/head";
-import { MantineProvider } from "@mantine/core";
+import NextApp from "next/app";
+import { getCookie, setCookie } from "cookies-next";
+import {
+  MantineProvider,
+  ColorScheme,
+  ColorSchemeProvider,
+} from "@mantine/core";
 import Layout from "../components/layout";
-// import "@/styles/globals.css";
 
 export default function App(props) {
   const { Component, pageProps } = props;
+  const [colorScheme, setColorScheme] = useState(props.colorScheme);
+  const toggleColorScheme = (value) => {
+    const nextColorScheme =
+      value || (colorScheme === "dark" ? "light" : "dark");
+    setColorScheme(nextColorScheme);
+    setCookie("mantine-color-scheme", nextColorScheme, {
+      maxAge: 2592000, // 30 days
+    });
+  };
 
   return (
     <>
@@ -16,18 +31,30 @@ export default function App(props) {
         />
       </Head>
 
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          /** Put your mantine theme override here */
-          colorScheme: "dark",
-        }}
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
       >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </MantineProvider>
+        <MantineProvider
+          withGlobalStyles
+          withNormalizeCSS
+          theme={{
+            colorScheme,
+          }}
+        >
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </MantineProvider>
+      </ColorSchemeProvider>
     </>
   );
 }
+
+App.getInitialProps = async (appContext) => {
+  const appProps = await NextApp.getInitialProps(appContext);
+  return {
+    ...appProps,
+    colorScheme: getCookie("mantine-color-scheme", appContext.ctx) || "dark",
+  };
+};
