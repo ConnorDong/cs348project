@@ -31,7 +31,8 @@ exports.register = function(req, res, connection) {
     res.send(JSON.stringify({
       "message": "Successfully registered user " + username,
       "data": {
-        "userId": results[2][0].userId
+        "userId": results[2][0].userId,
+        "username": username
       }
     }));
   });
@@ -52,20 +53,19 @@ Expected response:
 exports.login = function(req, res, connection) {
   let data = req.body;
   let [username, password] = [data.username, data.password]
-
-  connection.query(UserSql.login, [username, password], function (error, results, fields) {
+  connection.query(UserSql.login, [username, password, username], function (error, results, fields) {
     if (error) {
       res.status(400)
       res.send(JSON.stringify(error))
       return;
 
     }
-    console.log("The solution is: ", results[0]);
     if (results[0].loginSucceeded == 0) {
 
       res.send(JSON.stringify({
         "message": `Failed login for user ${username}: Incorrect username or password.`,
         "data": {
+          "userId": results[0].userId,
           "username": username
         }
       }));
@@ -74,6 +74,7 @@ exports.login = function(req, res, connection) {
       res.send(JSON.stringify({
         "message": "Successful login from user " + username,
         "data": {
+          "userId": results[0].userId,
           "username": username
         }
       }));

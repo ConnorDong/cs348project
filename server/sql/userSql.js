@@ -17,5 +17,7 @@ COMMIT;
 exports.login = `
     select exists( select * from Users
     where username=?
-    and password=?) as loginSucceeded;
+    and password=?) as loginSucceeded,
+    (select userId from Users
+    where username=?) as userId;
 `
