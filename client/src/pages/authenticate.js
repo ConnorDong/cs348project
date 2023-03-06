@@ -13,7 +13,6 @@ import {
   Stack,
   Space,
 } from "@mantine/core";
-import Head from "next/head";
 import styles from "@/styles/Authenticate.module.css";
 
 export default function Authenticate(props) {
@@ -66,11 +65,6 @@ export default function Authenticate(props) {
 
   return (
     <div className={styles.container}>
-      <Head>
-        <title>{upperFirst(type)}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main className={styles.main}>
         <Paper radius="md" p="xl" w={400} withBorder {...props}>
           <Text size="xl" weight={500}>
