@@ -1,14 +1,14 @@
 exports.getAll = `
     select * from Users;
-`
+`;
 
 // Register a user with username and password
 exports.register = `
 START TRANSACTION;
-    insert into Users VALUES (uuid(), ?, ?, ?);
+    insert into Users VALUES (uuid(), ?, ?);
     select @last_uuid as userId;
 COMMIT;
-`
+`;
 
 // Login will check if there exists a user with
 // username and password
@@ -20,4 +20,4 @@ exports.login = `
     and password=?) as loginSucceeded,
     (select userId from Users
     where username=?) as userId;
-`
+`;
