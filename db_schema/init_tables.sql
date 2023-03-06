@@ -163,6 +163,11 @@ create table UserReview (
 	foreign key (tconst) references TitleBasics(tconst)
 );
 
+CREATE TRIGGER ai_UserReviews
+AFTER INSERT ON UserReview
+FOR EACH ROW
+SET @last_uuid = NEW.reviewId;
+
 create table UserFollows (
     userId varchar(255) not null,
     followsUserId varchar(255) not null,

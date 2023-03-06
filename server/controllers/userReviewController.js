@@ -21,13 +21,23 @@ exports.createReview = function(req, res, connection) {
       res.send(JSON.stringify(error))
       return;
     }
-
     res.send(JSON.stringify({
       "message": "Successfully created review",
       "data": {
-        "reviewId": results[0]
+        "reviewId": results[2][0].reviewId
       }
     }));
   });
 }
 
+exports.deleteReview = function(req, res, connection) {
+  let data = req.body;
+  connection.query(UserReviewSql.deleteReview, [data.reviewId], function(error, results, field) {
+    if (error) {
+      res.status(400)
+      res.send(JSON.stringify(error))
+      return;
+    }
+    res.send();
+  })
+}

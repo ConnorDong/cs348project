@@ -15,14 +15,12 @@ Expected response:
 exports.register = function(req, res, connection) {
   let data = req.body;
   let [username, email, password] = [data.username, data.email, data.password]
-
   connection.query(UserSql.register, [username, email, password], function (error, results, fields) {
     if (error) {
       res.status(400)
       res.send(JSON.stringify(error))
       return;
     }
-
     // The sql query has 4 statements
     // we are interested in the first result of the third line executed
     console.log("New user: ", results[2][0]);
