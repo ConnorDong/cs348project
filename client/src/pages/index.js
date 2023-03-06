@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import styles from "@/styles/Home.module.css";
@@ -8,15 +7,16 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>CS348 Movie Database</title>
+        <title>CS348 MovieDB</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <div>
-          <h1 className={styles.title}>CS348: Movie Database</h1>
+          <h1 className={styles.title}>CS348: MovieDB</h1>
           <p className={styles.description}>
-            A comprehensive movie database built on the IMDB dataset.
+            A comprehensive movie database with users, reviews, and real movies.
+            Built on the IMDB dataset.
           </p>
         </div>
         <p className={styles.description}>

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { useToggle, upperFirst } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import {
@@ -18,13 +20,11 @@ export default function Authenticate(props) {
   const [type, toggle] = useToggle(["login", "register"]);
   const form = useForm({
     initialValues: {
-      email: "",
       username: "",
       password: "",
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
       password: (val) =>
         val.length <= 6
           ? "Password should include at least 6 characters"
@@ -32,25 +32,37 @@ export default function Authenticate(props) {
     },
   });
 
-  const handleSubmit = () => {
-    form.onSubmit((values) => {
-      console.log(values);
-      // Make API call to register/login
-      if (type === "register") {
-        fetch(`http://localhost:5000/${type}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-          });
-      }
-    });
+  const handleSubmit = (values) => {
+    // Make API call to register/login
+    fetch(`${process.env.HOST}/${type}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.table(data);
+        const { userId, username } = data?.data || {};
+        if (userId && username) {
+          localStorage.setItem(
+            "auth_token",
+            JSON.stringify({ userId, username })
+          );
+          router.push("/movies");
+        }
+      });
   };
+
+  // Check if we're already authenticated (useEffect since Window object is not available during SSR)
+  const router = useRouter();
+  useEffect(() => {
+    const auth_token = localStorage.getItem("auth_token");
+    if (auth_token) {
+      router.push("/movies");
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -65,32 +77,18 @@ export default function Authenticate(props) {
             {upperFirst(type)} to our Movie Database!
           </Text>
           <Space h="md" />
-          <form onSubmit={() => handleSubmit()}>
+          <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack>
               <TextInput
                 required
-                label="Email"
-                placeholder="you@gmail.com"
-                value={form.values.email}
+                label="Username"
+                placeholder="Your username"
+                value={form.values.username}
                 onChange={(event) =>
-                  form.setFieldValue("email", event.currentTarget.value)
+                  form.setFieldValue("username", event.currentTarget.value)
                 }
-                error={form.errors.email && "Invalid email"}
                 radius="md"
               />
-
-              {type === "register" && (
-                <TextInput
-                  required
-                  label="Username"
-                  placeholder="Your username"
-                  value={form.values.username}
-                  onChange={(event) =>
-                    form.setFieldValue("username", event.currentTarget.value)
-                  }
-                  radius="md"
-                />
-              )}
 
               <PasswordInput
                 required

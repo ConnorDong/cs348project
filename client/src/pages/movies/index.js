@@ -8,8 +8,7 @@ export default function Home() {
   const [data, setData] = useState("");
 
   useEffect(() => {
-    // Fetch '/' from localhost:5000
-    fetch("http://127.0.0.1:5000")
+    fetch(`${process.env.HOST}`)
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
