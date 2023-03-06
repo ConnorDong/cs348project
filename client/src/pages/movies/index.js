@@ -5,8 +5,6 @@ import { Group, Button, Card, Text, Stack, Center } from "@mantine/core";
 import { Star } from "tabler-icons-react";
 
 export default function Movies({ movies }) {
-  console.log(movies);
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -21,7 +19,7 @@ export default function Movies({ movies }) {
             <Link
               href={`/movies/${encodeURIComponent(movie.titleId)}`}
               style={{ textDecoration: "none" }}
-              key={movie.id}
+              key={movie.titleId}
             >
               <Card
                 shadow="sm"

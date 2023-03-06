@@ -13,7 +13,7 @@ var TitlesSql = require("./sql/titlesSql");
 const PORT = 5001;
 
 const app = express();
-app.use(cors({ credentials: true, origin: "http://localhost:5001" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

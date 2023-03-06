@@ -42,7 +42,6 @@ export default function Authenticate(props) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.table(data);
         const { userId, username } = data?.data || {};
         if (userId && username) {
           localStorage.setItem(

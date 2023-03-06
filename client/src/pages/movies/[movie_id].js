@@ -14,6 +14,8 @@ import {
   Center,
   Rating,
   Flex,
+  Space,
+  Accordion,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Star, Plus, Trash } from "tabler-icons-react";
@@ -25,6 +27,8 @@ export default function Movie({ data, tmdb_data }) {
     year,
     genre,
     directors,
+    writers,
+    portrayals,
     ratings,
     voteCount,
     reviews,
@@ -154,7 +158,54 @@ export default function Movie({ data, tmdb_data }) {
               - ({voteCount} votes)
             </p>
           </Flex>
+          <div className={styles.crew}>
+            <Text fw={700}>
+              Director{directors?.split(",")?.length > 1 ? "s" : ""}:
+            </Text>
+            <Space w="xs" />
+            <Text>{directors}</Text>
+            <Space w="xs" />
+            •
+            <Space w="xs" />
+            <Text fw={700}>
+              Writer{writers?.split(",")?.length > 1 ? "s" : ""}:{" "}
+            </Text>
+            <Space w="xs" />
+            <Text>{writers}</Text>
+          </div>
         </div>
+        {portrayals?.length ? (
+          <Accordion defaultValue="customization" mb="xl">
+            <Accordion.Item value="customization">
+              <Accordion.Control>
+                <Text fz="xl" fw={700}>
+                  Cast
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack>
+                  {portrayals?.map((portrayal) => (
+                    <Flex sx={{ alignItems: "center" }}>
+                      <Text fz="1.4rem" fw={500}>
+                        {portrayal.actorName}
+                      </Text>
+                      <Space w="xs" />
+                      •
+                      <Space w="xs" />
+                      <Flex gap="md">
+                        {portrayal.portrays.map((role) => (
+                          <Text fz="xl" fw={500}>
+                            {role}
+                          </Text>
+                        ))}
+                      </Flex>
+                    </Flex>
+                  ))}
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        ) : null}
         {tmdb_data && (
           <Flex gap="md">
             {!imageError && (
