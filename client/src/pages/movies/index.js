@@ -4,65 +4,8 @@ import styles from "@/styles/Movies.module.css";
 import { Group, Button, Card, Text, Stack, Center } from "@mantine/core";
 import { Star } from "tabler-icons-react";
 
-export default function Movies() {
-  const [data, setData] = useState([
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-    {
-      id: 31,
-      title: "Movie Title",
-      genre: "Action",
-      year: "2013",
-      rating: 8.5,
-    },
-  ]);
-
-  useEffect(() => {
-    // fetch(`${process.env.HOST}`)
-    //   .then((res) => res.json())
-    //   .then((data) => setData(data));
-  }, []);
-  console.log(data);
+export default function Movies({ movies }) {
+  console.log(movies);
 
   return (
     <div className={styles.container}>
@@ -73,10 +16,10 @@ export default function Movies() {
         </p>
       </div>
       <Stack>
-        {data?.length &&
-          data.map((movie) => (
+        {movies?.length &&
+          movies.map((movie) => (
             <Link
-              href={`/movies/${encodeURIComponent(movie.id)}`}
+              href={`/movies/${encodeURIComponent(movie.titleId)}`}
               style={{ textDecoration: "none" }}
               key={movie.id}
             >
@@ -110,7 +53,7 @@ export default function Movies() {
                       color={"rgb(233, 196, 106)"}
                     />
                     <Text fz="lg" fw={700} ml="0.3rem">
-                      {movie.rating}
+                      {movie.ratings}
                     </Text>
                   </Center>
                 </Group>
@@ -121,3 +64,10 @@ export default function Movies() {
     </div>
   );
 }
+
+Movies.getInitialProps = async (ctx) => {
+  const res = await fetch(`${process.env.HOST}/movies`);
+  const data = await res.json();
+
+  return { movies: data?.movies };
+};
