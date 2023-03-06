@@ -64,7 +64,7 @@ INSERT INTO `Writers` (`tconst`, `nconst`) VALUES
 
 INSERT INTO `Portrays` (`tconst`, `nconst`, `portray`) VALUES
 ('tt0000001', 'nm0000008', '\"[\"\"Self\"\"]\"'),
-('tt0000005', 'nm0000015', '\"[\"\"Blacksmith\"\"]\"'),
+('tt0000005', 'nm0000015', '\"[\"\"Blacksmith\", \"Whitesmith\"\"]\"'),
 ('tt0000005', 'nm0000016', '\"[\"\"Assistant\"\"]\"');
 
 INSERT INTO `Users` (`userId`, `username`, `password`) VALUES

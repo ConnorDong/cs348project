@@ -142,7 +142,6 @@ LOAD DATA
 create table Users (
     userId varchar(255) primary key,
     username varchar(255),
-    email varchar(255),
     password varchar(255)
 );
 -- Define a trigger to return the userId after insertion into Users

@@ -25,3 +25,5 @@ yarn-error.log*
 # ignore data files
 data/processed
 data/raw
+
+db_schema/my_init_tables.sql

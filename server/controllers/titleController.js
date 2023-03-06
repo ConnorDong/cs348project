@@ -1,9 +1,8 @@
-var TitlesSql = require("../sql/titlesSql")
-var GenresSql = require("../sql/genresSql")
-var WritersDirectorsSql = require("../sql/writersDirectorsSql")
-var PrincipalsSql = require("../sql/principalsSql")
-var UserReviewSql = require("../sql/userReviewSql")
-
+var TitlesSql = require("../sql/titlesSql");
+var GenresSql = require("../sql/genresSql");
+var WritersDirectorsSql = require("../sql/writersDirectorsSql");
+var PrincipalsSql = require("../sql/principalsSql");
+var UserReviewSql = require("../sql/userReviewSql");
 
 /* Get data for a particular movie (reviews and metadata such as: genre, year, director, actors, crew, etc.)
 Example request:
@@ -77,38 +76,56 @@ Example response:
     }
 }
 */
-exports.getInfo = async function(req, res, connectionPromise) {
-  let tconst = req.params.tconst
+exports.getInfo = async function (req, res, connectionPromise) {
+  let tconst = req.params.tconst;
 
   const connection = await connectionPromise;
 
-  // Get all 
-  const [rows1, fields1] = await connection.execute(TitlesSql.getTitleInfo, [tconst]);
-  let titleInfo = rows1[0]
+  // Get all
+  const [rows1, fields1] = await connection.execute(TitlesSql.getTitleInfo, [
+    tconst,
+  ]);
+  let titleInfo = rows1[0];
   // Get all genres associated with the title
-  const [genres, fields2] = await connection.execute(GenresSql.getByTconst, [tconst]);
+  const [genres, fields2] = await connection.execute(GenresSql.getByTconst, [
+    tconst,
+  ]);
   // Get all directors associated with the title
-  const [directors, fields3] = await connection.execute(WritersDirectorsSql.getDirectorsByTconst, [tconst]);
+  const [directors, fields3] = await connection.execute(
+    WritersDirectorsSql.getDirectorsByTconst,
+    [tconst]
+  );
   // Get all writers associated with the title
-  const [writers, fields4] = await connection.execute(WritersDirectorsSql.getWritersByTconst, [tconst]);
+  const [writers, fields4] = await connection.execute(
+    WritersDirectorsSql.getWritersByTconst,
+    [tconst]
+  );
   // Get all principals associated with the title
   //const [principals, fields5] = await connection.execute(PrincipalsSql.getPrincipalsByTconst, [tconst]);
   // Get all characters played by actors
-  const [portrayals, fields6] = await connection.execute(PrincipalsSql.getPortrayalsByTconst, [tconst]);
+  const [portrayals, fields6] = await connection.execute(
+    PrincipalsSql.getPortrayalsByTconst,
+    [tconst]
+  );
   // Get all user reviews associated with the title
-  const [reviews, fields7] = await connection.execute(UserReviewSql.getByTconst, [tconst]);
+  const [reviews, fields7] = await connection.execute(
+    UserReviewSql.getByTconst,
+    [tconst]
+  );
 
-  titleInfo['genres'] = genres
-  titleInfo['directors'] = directors
-  titleInfo['writers'] = writers
-  titleInfo['portrayals'] = portrayals
+  titleInfo["genres"] = genres;
+  titleInfo["directors"] = directors;
+  titleInfo["writers"] = writers;
+  titleInfo["portrayals"] = portrayals;
   //titleInfo['principals'] = principals
-  titleInfo['reviews'] = reviews
-  res.send(JSON.stringify({
-    "message": `Successfully retrieved info for title ${tconst}`,
-    "data": titleInfo
-  }))
-}
+  titleInfo["reviews"] = reviews;
+  res.send(
+    JSON.stringify({
+      message: `Successfully retrieved info for title ${tconst}`,
+      data: titleInfo,
+    })
+  );
+};
 
 /*
 Example Response:
@@ -140,46 +157,72 @@ Example Response:
             "numVotes": "18"
         },
 */
-exports.getAllHighestRated = function(req, res, connection) {
-
-  connection.query(TitlesSql.getHighestRatedTitles, function (error, results, fields) {
-    if (error) {
-      res.status(400)
-      res.send(JSON.stringify(error))
-      return;
-    }
-
-    res.send(JSON.stringify({
-      "message": "Successfully retrieved titles",
-      "data": results
-    }));
-  });
-}
-
-exports.getMovies = function(req, res, connection) {
-    connection.query(TitlesSql.retrieveMovies, [], function (error, results, fields) {
+exports.getAllHighestRated = function (req, res, connection) {
+  connection.query(
+    TitlesSql.getHighestRatedTitles,
+    function (error, results, fields) {
       if (error) {
-        res.status(400)
-        res.send(JSON.stringify(error))
+        res.status(400);
+        res.send(JSON.stringify(error));
         return;
-  
       }
-      res.send(JSON.stringify({
-        "movies": results
-      }));
-    })
-}
 
-exports.getMovieDetails = async function(req, res, connectionPromise) {
-    let data = req.body;
-    const connection = await connectionPromise
-    console.log(data.titleId)
-    const [info, fields1] = await connection.execute(TitlesSql.getDetailedTitleInfo, [data.titleId]);
-    const [portrayals, fields2] = await connection.execute(PrincipalsSql.getPortrayalsByTconst, [data.titleId]);
-    const [reviews, fields3] = await connection.execute(UserReviewSql.getByTconst, [data.titleId]);
-    const titleInfo = info[0]
-    titleInfo['portrayals'] = portrayals
-    titleInfo['reviews'] = reviews
-    titleInfo.reviews 
-    res.send(JSON.stringify(titleInfo))
-}
+      res.send(
+        JSON.stringify({
+          message: "Successfully retrieved titles",
+          data: results,
+        })
+      );
+    }
+  );
+};
+
+exports.getMovies = function (req, res, connection) {
+  connection.query(
+    TitlesSql.retrieveMovies,
+    [],
+    function (error, results, fields) {
+      if (error) {
+        res.status(400);
+        res.send(JSON.stringify(error));
+        return;
+      }
+      res.send(
+        JSON.stringify({
+          movies: results,
+        })
+      );
+    }
+  );
+};
+
+exports.getMovieDetails = async function (req, res, connectionPromise) {
+  let data = req.body;
+  const connection = await connectionPromise;
+  console.log(data.titleId);
+  const [info, fields1] = await connection.execute(
+    TitlesSql.getDetailedTitleInfo,
+    [data.titleId]
+  );
+  const [portrayals, fields2] = await connection.execute(
+    PrincipalsSql.getPortrayalsByTconst,
+    [data.titleId]
+  );
+  const [reviews, fields3] = await connection.execute(
+    UserReviewSql.getByTconst,
+    [data.titleId]
+  );
+  const titleInfo = info[0];
+  portrayals.forEach((portrayal) => {
+    let newStr = portrayal.portrays.split('"').join("");
+    portrayal.portrays = newStr.substring(1, newStr.length - 1).split(",");
+    portrayal.portrays = portrayal.portrays.map((portrayal) =>
+      portrayal.trim()
+    );
+  });
+
+  titleInfo["portrayals"] = portrayals;
+  titleInfo["reviews"] = reviews;
+  titleInfo.reviews;
+  res.send(JSON.stringify(titleInfo));
+};
