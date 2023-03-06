@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Movies.module.css";
 import { Flex, Button } from "@mantine/core";
 
 export default function Home() {
@@ -15,12 +15,13 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
-        <div>
-          <h1 className={styles.title}>Movies</h1>
-          <p className={styles.description}>A list of all movies.</p>
-        </div>
-      </main>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Movies</h1>
+        <p className={styles.description}>
+          A directory of all movies in MovieDB.
+        </p>
+      </div>
+      <div className={styles.movieCard}>Lol</div>
     </div>
   );
 }

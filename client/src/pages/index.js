@@ -14,7 +14,7 @@ export default function Home() {
           </p>
         </div>
         <p className={styles.description}>
-          Please login or register an account:
+          Please login or sign up for an account:
         </p>
         <Flex gap="md">
           <Link href="/authenticate">
