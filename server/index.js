@@ -17,6 +17,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:5000" }));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+const PORT = 5001;
 
 var conf = {
   host: "localhost",
