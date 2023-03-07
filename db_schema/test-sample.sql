@@ -11,15 +11,19 @@ group by tconst
 from TitleBasics
 natural inner join TitleRatings;
 
+start transaction;
 insert into UserReview
    values ('5938b4ed-cd57-4e57-8a1b-d5b2b23764f4', '601876bb-8b8b-4558-8a79-e9d70ff76b46', 'tt0000001', 4, 'This was a great movie!');
    select @last_uuid as reviewId;
+commit;
 
 delete from UserReview
    where reviewId='5938b4ed-cd57-4e57-8a1b-d5b2b23764f4';
 
+start transaction;
 insert into Users VALUES (uuid(), 'test', 'password');
    select @last_uuid as userId;
+commit;
 
 select exists( select * from Users
    where username='test'
@@ -50,3 +54,7 @@ group by tconst
 from TitleBasics
 natural inner join TitleRatings
 where TitleBasics.tconst='tt0000001';
+
+select reviewId, username, Round(rating, 1) as rating, description as comment from UserReview
+   natural inner join Users
+   where tconst='tt0000001';  
