@@ -6,7 +6,7 @@
 
 First time:
 
-To use sample data, run `/db_schema/create_tables.sql` andthen `/db_schema/sample_data.sql`
+To use sample data, using the mysql command line from the / directory run `/db_schema/create_tables.sql` andthen `/db_schema/sample_data.sql`
 
 ```
 cd server
