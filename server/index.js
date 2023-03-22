@@ -84,6 +84,16 @@ app.post("/login", (req, res) => {
   UserController.login(req, res, connection);
 });
 
+// List users
+app.get("/users", (req, res) => {
+  UserController.getAll(req, res, connection);
+});
+
+// Get user page
+app.get("/users/:userId", (req, res) => {
+  UserController.getUserInfo(req, res, connectionPromise);
+});
+
 // Reviews --------------------------------------------------------------------
 // Create review
 app.post("/review", (req, res) => {
@@ -96,7 +106,7 @@ app.post("/review/delete", (req, res) => {
 
 // Followers ------------------------------------------------------------------
 // follow a user
-app.post("/followers/follow", (req, res) => {
+app.post("/followers/follow/", (req, res) => {
   FollowController.createFollower(req, res, connection);
 });
 

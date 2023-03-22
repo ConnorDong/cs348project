@@ -100,4 +100,34 @@ AFTER INSERT ON UserReview
 FOR EACH ROW
 SET @last_uuid = NEW.reviewId;
 
+create table UserFollows (
+    userId varchar(255) not null,
+    followsUserId varchar(255) not null,
+    primary key (userId, followsUserId),
+    foreign key (userId) references Users(userId),
+    foreign key (followsUserId) references Users(userId),
+    -- users cannot follow themselves
+    constraint columns_cannot_equal check (userId <> followsUserId)
+);
+
+create table WatchList (
+    listId varchar(255) primary key,
+    userId varchar(255) not null,
+    listName varchar(255) not null,
+    foreign key (userId) references Users(userId)
+);
+
+CREATE TRIGGER ai_WatchList
+AFTER INSERT ON WatchList
+FOR EACH ROW
+SET @last_uuid = NEW.listId;
+
+create table WatchListItem (
+    listId varchar(255) not null,
+    tconst varchar(255) not null,
+    primary key (listId, tconst),
+    foreign key (listId) references WatchList(listId),
+    foreign key (tconst) references TitleBasics(tconst)
+);
+
 show tables;
