@@ -13,7 +13,7 @@ exports.getFollowerList = `
 exports.getFollowingList = `
     select u.userId, u.username from UserFollows as uf
     join Users as u on uf.followsUserId=u.userId
-    where u.userId=?
+    where uf.userId=?
 `
 
 // Unfollow a user
