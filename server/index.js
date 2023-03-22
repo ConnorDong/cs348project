@@ -8,6 +8,7 @@ var UserController = require("./controllers/userController");
 var FollowController = require("./controllers/userFollowsController");
 var TitleController = require("./controllers/titleController");
 var GenresController = require("./controllers/genresController");
+var WatchListController = require("./controllers/watchListController");
 var TitlesSql = require("./sql/titlesSql");
 
 const PORT = 5001;
@@ -104,9 +105,30 @@ app.post("/review/delete", (req, res) => {
   ReviewController.deleteReview(req, res, connection);
 });
 
+// WatchLists -----------------------------------------------------------------
+// Create empty watchlist
+app.post("/watchlists/create", (req, res) => {
+  WatchListController.createWatchList(req, res, connection);
+});
+
+// Add title to watchlist
+app.post("/watchlists/append", (req, res) => {
+  WatchListController.addWatchListItem(req, res, connection);
+});
+
+// Remove title from watchlist
+app.post("/watchlists/remove", (req, res) => {
+  WatchListController.removeWatchListItem(req, res, connection);
+});
+
+// Get all watchlists
+app.get("/watchlists", (req, res) => {
+  WatchListController.getAllWatchLists(req, res, connection);
+});
+
 // Followers ------------------------------------------------------------------
 // follow a user
-app.post("/followers/follow/", (req, res) => {
+app.post("/followers/follow", (req, res) => {
   FollowController.createFollower(req, res, connection);
 });
 
