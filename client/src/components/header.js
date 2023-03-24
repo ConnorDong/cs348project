@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Sun, MoonStars } from "tabler-icons-react";
+import { Sun, MoonStars, User } from "tabler-icons-react";
 import styles from "../styles/Header.module.css";
 
 export default function CustomHeader() {
@@ -49,14 +49,35 @@ export default function CustomHeader() {
               Home
             </Button>
             {authToken && (
-              <Button
-                variant="subtle"
-                color="gray"
-                h="100%"
-                onClick={() => router.push("/movies")}
-              >
-                Movies
-              </Button>
+              <>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
+                  onClick={() => router.push("/movies")}
+                >
+                  Movies
+                </Button>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
+                  onClick={() => router.push("/users")}
+                >
+                  Users
+                </Button>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
+                  onClick={() =>
+                    router.push(`/users/${JSON.parse(authToken).userId}`)
+                  }
+                >
+                  My Profile
+                  <User />
+                </Button>
+              </>
             )}
           </Button.Group>
 
