@@ -4,9 +4,11 @@ select * from UserReview
 
 // Get all reviews for a user
 exports.getByUserId = `
-select * from UserReview
+select tb.tconst, primaryTitle, reviewId, userId, rating, description  from UserReview
+    join TitleBasics as tb on UserReview.tconst=tb.tconst
     where userId=?
 `
+
 // Get all reviews made by a title
 exports.getByTconst = `
 select reviewId, username, Round(rating, 1) as rating, description as comment from UserReview
