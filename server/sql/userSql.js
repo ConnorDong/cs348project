@@ -1,5 +1,10 @@
 exports.getAll = `
-    select * from Users;
+    select userId, username from Users
+`;
+
+exports.getByUserId = `
+    select userId, username from Users
+    where userId=?
 `;
 
 // Register a user with username and password
