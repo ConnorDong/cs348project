@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Users.module.css";
-import { Group, Button, Card, Text, Stack, Center } from "@mantine/core";
+import { Group, Badge, Card, Text, Stack, Center } from "@mantine/core";
 import { ExternalLink } from "tabler-icons-react";
 
 export default function Users({ server_users }) {
@@ -83,16 +83,15 @@ export default function Users({ server_users }) {
                         )}
                         {/* If user follows you: */}
                         {loggedInUserInfo?.followers?.has(user.userId) && (
-                          <Text color="dimmed">(follows you!)</Text>
+                          <Badge color="lime" variant="filled">
+                            Follows you!
+                          </Badge>
                         )}
                         {/* If you follow user: */}
                         {loggedInUserInfo?.following?.has(user.userId) && (
-                          <>
-                            {loggedInUserInfo?.followers?.has(user.userId) && (
-                              <Text color="dimmed">|</Text>
-                            )}
-                            <Text color="dimmed">(following)</Text>
-                          </>
+                          <Badge color="cyan" variant="filled">
+                            Following
+                          </Badge>
                         )}
                       </Group>
                     </div>

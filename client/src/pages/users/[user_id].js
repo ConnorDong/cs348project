@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router";
 import styles from "@/styles/User.module.css";
 import {
   Modal,
@@ -9,7 +9,7 @@ import {
   ActionIcon,
   Card,
   Text,
-  Textarea,
+  TextInput,
   Stack,
   Center,
   Rating,
@@ -18,10 +18,13 @@ import {
   Accordion,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Star, Plus, Trash } from "tabler-icons-react";
+import { Star, Plus, ExternalLink } from "tabler-icons-react";
 
 export default function User({ data }) {
-  const { user, followers, following, reviews, watchlists } = data;
+  const router = useRouter();
+
+  const { user, followers, following, reviews, watchlists } = data?.data;
+  const [userWatchlists, setUserWatchLists] = useState(watchlists);
   console.table(data);
 
   // Get logged in user's id
@@ -32,190 +35,392 @@ export default function User({ data }) {
     setAuthToken(auth_json);
   }, []);
 
+  // Update userWatchlists when user changes
+  useEffect(() => {
+    setUserWatchLists(watchlists);
+  }, [user]);
+
+  // Calculate memoized values for display
+  // User's average rating across all their reviews
+  const avgRating = useMemo(
+    () => reviews.reduce((a, b) => a + b.rating, 0) / reviews.length || 0,
+    [reviews]
+  );
+  //  If the logged in user is following this user
+  const isLoggedInUserFollowing = useMemo(
+    () => followers.some((user) => user.userId === authToken?.userId),
+    [authToken, user]
+  );
+
   // Modal state
   const [opened, { open, close }] = useDisclosure(false);
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewDescription, setReviewDescription] = useState("");
-  const [reviewError, setReviewError] = useState("");
+  const [newWatchlistName, setNewWatchlistName] = useState("New Watchlist");
 
-  // Handles submitting a review (made by the logged in user)
-  const handleSubmit = () => {
-    if (reviewDescription.length < 10) {
-      setReviewError("Review must be at least 10 characters.");
-      return;
-    } else {
-      // Make API call to create review
-      fetch(`${process.env.HOST}/review`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          userId: authToken?.userId,
-          titleId: titleId,
-          rating: reviewRating,
-          description: reviewDescription,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.data?.reviewId) {
-            // Add review to reviews array
-            const newReviews = [
-              ...userReviews,
-              {
-                reviewId: data.data.reviewId,
-                username: authToken?.username,
-                rating: reviewRating,
-                comment: reviewDescription,
-              },
-            ];
-            setUserReviews(newReviews);
-            setReviewDescription("");
-            setReviewRating(5);
-            close();
-          }
-        });
-    }
-  };
-
-  // Handles deleting a review (made by the logged in user)
-  const handleDelete = (reviewId) => {
-    // Make API call to delete review with reviewId
-    fetch(`${process.env.HOST}/review/delete`, {
+  // Handles creating a new watchlist
+  const createWatchlist = () => {
+    // Make API call to create review
+    fetch(`${process.env.HOST}/watchlists/create`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ reviewId }),
-    }).then((res) => {
-      if (res.status === 200) {
-        // Remove review from reviews array
-        const newReviews = userReviews.filter(
-          (review) => review.reviewId !== reviewId
-        );
-        setUserReviews(newReviews);
-      }
-    });
+      body: new URLSearchParams({
+        userId: authToken?.userId,
+        listName: newWatchlistName,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.data?.listId) {
+          // Add new watchlist to watchlists array
+          const newWatchlists = [
+            {
+              watchListId: data.data.listId,
+              name: newWatchlistName,
+              titles: [],
+            },
+            ...watchlists,
+          ];
+          setUserWatchLists(newWatchlists);
+          setNewWatchlistName("New Watchlist");
+          close();
+        }
+      });
+  };
+
+  // Handles adding title to a watchlist
+  // const handleAddTitleToWatchlist = (reviewId) => {
+  //   // Make API call to delete review with reviewId
+  //   fetch(`${process.env.HOST}/review/delete`, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  //     body: new URLSearchParams({ reviewId }),
+  //   }).then((res) => {
+  //     if (res.status === 200) {
+  //       // Remove review from reviews array
+  //       const newReviews = userReviews.filter(
+  //         (review) => review.reviewId !== reviewId
+  //       );
+  //       setUserReviews(newReviews);
+  //     }
+  //   });
+  // };
+
+  // Handles removing title from a watchlist
+
+  // Handles following a user
+  const followUser = () => {
+    fetch(`${process.env.HOST}/followers/follow`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        userId: authToken?.userId,
+        userFollowsId: user?.[0]?.userId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        router.reload(window.location.pathname);
+      });
+  };
+
+  // Handles unfollowing a user
+  const unfollowUser = () => {
+    fetch(`${process.env.HOST}/followers/unfollow`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        userId: authToken?.userId,
+        userFollowsId: user?.[0]?.userId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        router.reload(window.location.pathname);
+      });
   };
 
   return (
-    <></>
-    // <>
-    //   <Modal
-    //     opened={opened}
-    //     onClose={close}
-    //     title="Write a Review"
-    //     size="lg"
-    //     centered
-    //   >
-    //     <Stack>
-    //       <Rating
-    //         fractions={2}
-    //         defaultValue={5}
-    //         count={10}
-    //         size="lg"
-    //         onChange={setReviewRating}
-    //       />
-    //       <Textarea
-    //         placeholder="Write your review here - be creative!"
-    //         label="Review description"
-    //         error={reviewError}
-    //         size="md"
-    //         withAsterisk
-    //         value={reviewDescription}
-    //         onChange={(e) => {
-    //           setReviewDescription(e.currentTarget.value);
-    //           setReviewError("");
-    //         }}
-    //       />
-    //       <Button color="blue" variant="filled" onClick={handleSubmit}>
-    //         Submit Review
-    //       </Button>
-    //     </Stack>
-    //   </Modal>
-    //   <div className={styles.container}>
-    //     <div className={styles.header}>
-    //       <Flex gap="sm">
-    //         <h1 className={styles.title}>{title}</h1>
-    //         <p className={styles.year}>
-    //           ({year}) • {genre} • {ratings}
-    //           <Star
-    //             size={28}
-    //             strokeWidth={2}
-    //             color={"rgb(233, 196, 106)"}
-    //             style={{ paddingTop: "8px" }}
-    //           />
-    //           - ({voteCount} votes)
-    //         </p>
-    //       </Flex>
-    //       <div className={styles.crew}>
-    //         <Text fw={700}>
-    //           Director{directors?.split(",")?.length > 1 ? "s" : ""}:
-    //         </Text>
-    //         <Space w="xs" />
-    //         <Text>{directors}</Text>
-    //         <Space w="xs" />
-    //         •
-    //         <Space w="xs" />
-    //         <Text fw={700}>
-    //           Writer{writers?.split(",")?.length > 1 ? "s" : ""}:{" "}
-    //         </Text>
-    //         <Space w="xs" />
-    //         <Text>{writers}</Text>
-    //       </div>
-    //     </div>
-    //     <Group spacing="xs">
-    //       <h1 className={styles.secondarytitle}>Reviews</h1>
-    //       <ActionIcon color="blue" variant="filled" mt="0.5rem" onClick={open}>
-    //         <Plus size={48} strokeWidth={2} color={"black"} />
-    //       </ActionIcon>
-    //     </Group>
-    //     <Stack>
-    //       {userReviews?.length ? (
-    //         userReviews.map((review) => (
-    //           <Card
-    //             shadow="sm"
-    //             padding="lg"
-    //             radius="md"
-    //             withBorder
-    //             key={review.reviewId}
-    //           >
-    //             <Group position="apart">
-    //               <div style={{ maxWidth: "90%" }}>
-    //                 <Group spacing="xs">
-    //                   <Text fz="xl" fw={500}>
-    //                     {review.username}
-    //                   </Text>
-    //                   {/* ONLY SHOW THIS IF OUR USERNAME = REVIEW'S USERNAME */}
-    //                   {authToken?.username === review.username && (
-    //                     <ActionIcon
-    //                       onClick={() => handleDelete(review.reviewId)}
-    //                     >
-    //                       <Trash size={20} strokeWidth={2} color={"gray"} />
-    //                     </ActionIcon>
-    //                   )}
-    //                 </Group>
-    //                 <Text>{review.comment}</Text>
-    //               </div>
-    //               <Center gap="5px">
-    //                 <Star
-    //                   size={28}
-    //                   strokeWidth={2}
-    //                   color={"rgb(233, 196, 106)"}
-    //                 />
-    //                 <Text fz="lg" fw={700} ml="0.3rem">
-    //                   {review.rating}
-    //                 </Text>
-    //               </Center>
-    //             </Group>
-    //           </Card>
-    //         ))
-    //       ) : (
-    //         <Text fz="xl">
-    //           No user reviews for this movie yet! Be the first to add one by
-    //           clicking on the + button above!
-    //         </Text>
-    //       )}
-    //     </Stack>
-    //   </div>
-    // </>
+    // <></>
+    <>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={<Text fz="xl">Create a New Watchlist</Text>}
+        size="lg"
+        centered
+      >
+        <Stack>
+          <TextInput
+            placeholder="e.g. Want to Watch!"
+            label="Watchlist Name"
+            size="md"
+            withAsterisk
+            value={newWatchlistName}
+            onChange={(e) => {
+              setNewWatchlistName(e.currentTarget.value);
+            }}
+          />
+          <Button color="blue" variant="filled" onClick={createWatchlist}>
+            Create New Watchlist
+          </Button>
+        </Stack>
+      </Modal>
+      <div className={styles.container}>
+        <div className={styles.header} style={{ maxWidth: "98%" }}>
+          <Group position="apart">
+            <Flex gap="sm">
+              <h1 className={styles.title}>{user?.[0]?.username}</h1>
+              <p className={styles.year}>
+                average rating given: {avgRating.toFixed(1)}
+                <Star
+                  size={28}
+                  strokeWidth={2}
+                  color={"rgb(233, 196, 106)"}
+                  style={{ paddingTop: "8px" }}
+                />
+                - ({reviews?.length} reviews)
+              </p>
+            </Flex>
+            {authToken?.userId ===
+            user?.[0]?.userId ? null : isLoggedInUserFollowing ? (
+              <Button color="red" variant="filled" onClick={unfollowUser}>
+                Unfollow
+              </Button>
+            ) : (
+              <Button color="blue" variant="filled" onClick={followUser}>
+                Follow
+              </Button>
+            )}
+          </Group>
+          <div className={styles.crew}>
+            <Text fw={700}>Following</Text>
+            <Space w="xs" />
+            <Text>{following?.length}</Text>
+            <Space w="xs" />
+            •
+            <Space w="xs" />
+            <Text fw={700}>Followers</Text>
+            <Space w="xs" />
+            <Text>{followers?.length}</Text>
+          </div>
+        </div>
+        {following?.length || followers?.length ? (
+          <Accordion mb="xl">
+            <Accordion.Item value="following">
+              <Accordion.Control>
+                <Text fz="xl" fw={700}>
+                  Following
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack mt="5px">
+                  {following?.map((user) => (
+                    <Link
+                      href={`/users/${encodeURIComponent(user.userId)}`}
+                      style={{ textDecoration: "none" }}
+                      key={user.userId}
+                    >
+                      <Card
+                        shadow="sm"
+                        padding="md"
+                        radius="md"
+                        withBorder
+                        sx={{
+                          transition: "0.3s ease",
+                          "&:hover": {
+                            filter: "brightness(.8)",
+                          },
+                        }}
+                      >
+                        <Group position="apart">
+                          <div>
+                            <Group spacing="xs">
+                              <Text fz="xl" fw={500}>
+                                {user.username}
+                              </Text>
+                            </Group>
+                          </div>
+                          <Center gap="5px">
+                            <ExternalLink size={28} strokeWidth={2} />
+                          </Center>
+                        </Group>
+                      </Card>
+                    </Link>
+                  ))}
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item value="followers">
+              <Accordion.Control>
+                <Text fz="xl" fw={700}>
+                  Followers
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack mt="5px">
+                  {followers?.map((user) => (
+                    <Link
+                      href={`/users/${encodeURIComponent(user.userId)}`}
+                      style={{ textDecoration: "none" }}
+                      key={user.userId}
+                    >
+                      <Card
+                        shadow="sm"
+                        padding="md"
+                        radius="md"
+                        withBorder
+                        sx={{
+                          transition: "0.3s ease",
+                          "&:hover": {
+                            filter: "brightness(.8)",
+                          },
+                        }}
+                      >
+                        <Group position="apart">
+                          <div>
+                            <Group spacing="xs">
+                              <Text fz="xl" fw={500}>
+                                {user.username}
+                              </Text>
+                            </Group>
+                          </div>
+                          <Center gap="5px">
+                            <ExternalLink size={28} strokeWidth={2} />
+                          </Center>
+                        </Group>
+                      </Card>
+                    </Link>
+                  ))}
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        ) : null}
+        <Group spacing="xs">
+          <h1 className={styles.secondarytitle}>Watchlists</h1>
+          {authToken?.userId === user?.[0]?.userId && (
+            <ActionIcon
+              color="blue"
+              variant="filled"
+              mt="0.5rem"
+              onClick={open}
+            >
+              <Plus size={48} strokeWidth={2} color={"black"} />
+            </ActionIcon>
+          )}
+        </Group>
+        {userWatchlists?.length ? (
+          <Accordion mb="xl">
+            {userWatchlists.map((watchlist) => (
+              <Accordion.Item value={watchlist.watchListId}>
+                <Accordion.Control>
+                  <Text fz="xl" fw={700}>
+                    {watchlist.name}
+                  </Text>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  {watchlist.titles.length ? (
+                    <Stack mt="5px">
+                      {watchlist.titles.map((movie) => (
+                        <Link
+                          href={`/movies/${encodeURIComponent(movie.tconst)}`}
+                          style={{ textDecoration: "none" }}
+                          key={movie.tconst}
+                        >
+                          <Card
+                            shadow="sm"
+                            padding="md"
+                            radius="md"
+                            withBorder
+                            sx={{
+                              transition: "0.3s ease",
+                              "&:hover": {
+                                filter: "brightness(.8)",
+                              },
+                            }}
+                          >
+                            <Group position="apart">
+                              <div>
+                                <Group spacing="xs">
+                                  <Text fz="xl" fw={500}>
+                                    {movie.primaryTitle}
+                                  </Text>
+                                </Group>
+                              </div>
+                              <Center gap="5px">
+                                <ExternalLink size={28} strokeWidth={2} />
+                              </Center>
+                            </Group>
+                          </Card>
+                        </Link>
+                      ))}
+                    </Stack>
+                  ) : (
+                    <Text color="dimmed">
+                      No movies in this watchlist yet! Add entries to your
+                      watchlists on movie pages.
+                    </Text>
+                  )}
+                </Accordion.Panel>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+        ) : null}
+        <Flex gap="sm" sx={{ alignItems: "center" }}>
+          <h1 className={styles.secondarytitle}>Reviews</h1>
+          <Text color="dimmed" mt="15px">
+            (click a review to navigate to its movie page)
+          </Text>
+        </Flex>
+        <Stack>
+          {reviews?.length ? (
+            reviews.map((review) => (
+              <Link
+                href={`/movies/${encodeURIComponent(review.tconst)}`}
+                style={{ textDecoration: "none" }}
+                key={user.userId}
+              >
+                <Card
+                  shadow="sm"
+                  padding="lg"
+                  radius="md"
+                  withBorder
+                  key={review.reviewId}
+                  sx={{
+                    transition: "0.3s ease",
+                    "&:hover": {
+                      filter: "brightness(.8)",
+                    },
+                  }}
+                >
+                  <Group position="apart">
+                    <div style={{ maxWidth: "90%" }}>
+                      <Group spacing="xs">
+                        <Text fz="xl" fw={500}>
+                          TITLE GOES HERE
+                        </Text>
+                      </Group>
+                      <Text>{review.description}</Text>
+                    </div>
+                    <Center gap="5px">
+                      <Star
+                        size={28}
+                        strokeWidth={2}
+                        color={"rgb(233, 196, 106)"}
+                      />
+                      <Text fz="lg" fw={700} ml="0.3rem">
+                        {review.rating.toFixed(1)}
+                      </Text>
+                    </Center>
+                  </Group>
+                </Card>
+              </Link>
+            ))
+          ) : (
+            <Text fz="xl">This user hasn't written any reviews yet!</Text>
+          )}
+        </Stack>
+      </div>
+    </>
   );
 }
 

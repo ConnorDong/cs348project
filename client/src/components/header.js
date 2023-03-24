@@ -62,6 +62,14 @@ export default function CustomHeader() {
                   variant="subtle"
                   color="gray"
                   h="100%"
+                  onClick={() => router.push("/movies")}
+                >
+                  Genres
+                </Button>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
                   onClick={() => router.push("/users")}
                 >
                   Users

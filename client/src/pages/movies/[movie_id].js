@@ -33,7 +33,6 @@ export default function Movie({ data, tmdb_data }) {
     voteCount,
     reviews,
   } = data;
-  console.table(data);
   const [userReviews, setUserReviews] = useState(reviews);
 
   // Get logged in user's id
