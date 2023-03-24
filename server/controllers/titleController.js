@@ -274,8 +274,8 @@ exports.getMoviesByGenre = async function (req, res, connectionPromise) {
   }
 
   const [checkHasMore, fields2] = await connection.execute(
-    TitlesSql.checkHasMore,
-    [nextCursor]
+    TitlesSql.checkHasMoreByGenre,
+    [nextCursor, genre]
   );
 
   console.log("x checkHasMore: ", checkHasMore)
