@@ -186,7 +186,6 @@ exports.getMovies = async function (req, res, connectionPromise) {
   if (cursor === undefined) {
     cursor = 'tt0000000'
   }
-  console.log("x cursor: ", cursor)
 
   const [results, fields1] = await connection.execute(
     TitlesSql.retrieveMoviesPaginated,
@@ -203,8 +202,6 @@ exports.getMovies = async function (req, res, connectionPromise) {
     TitlesSql.checkHasMore,
     [nextCursor]
   );
-
-  console.log("x checkHasMore: ", checkHasMore)
 
   // If there are no more results, set the next cursor to empty
   if (checkHasMore[0].hasMore == 0) {
@@ -248,4 +245,51 @@ exports.getMovieDetails = async function (req, res, connectionPromise) {
   titleInfo["reviews"] = reviews;
   titleInfo.reviews;
   res.send(JSON.stringify(titleInfo));
+};
+
+exports.getMoviesByGenre = async function (req, res, connectionPromise) {
+  const connection = await connectionPromise;
+  var cursor = req.query.cursor;
+  var genre = req.query.genre;
+  // Fetch genre info
+  const [genreInfo, fields0] = await connection.execute(GenresSql.genresInfoByGenre, [genre]);
+
+  console.log("Genre info: ", genreInfo)
+  // If there is no cursor, set it to the first movie
+  if (cursor === undefined) {
+    cursor = 'tt0000000'
+  }
+
+  console.log("Parameters: ", cursor, Constants.PAGE_SIZE, genre)
+
+  const [results, fields1] = await connection.execute(
+    TitlesSql.retrieveMoviesByGenrePaginated,
+    [cursor, genre, Constants.PAGE_SIZE]
+  );
+
+  // Get the next cursor
+  var nextCursor = '';
+  if (results.length > 0) {
+    nextCursor = results[results.length - 1].titleId;
+  }
+
+  const [checkHasMore, fields2] = await connection.execute(
+    TitlesSql.checkHasMore,
+    [nextCursor]
+  );
+
+  console.log("x checkHasMore: ", checkHasMore)
+
+  // If there are no more results, set the next cursor to empty
+  if (checkHasMore[0].hasMore == 0) {
+    nextCursor = '';
+  }
+
+  res.send(
+    JSON.stringify({
+      genreInfo: genreInfo[0],
+      movies: results,
+      nextCursor: nextCursor
+    })
+  );
 };

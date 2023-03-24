@@ -47,6 +47,11 @@ create table Genres (
     foreign key (tconst) references TitleBasics(tconst)
 );
 
+create table GenreInfo (
+	genre varchar(255) primary key,
+    description text
+);
+
 -- Portrays
 create table Portrays (
 	tconst varchar(255),
