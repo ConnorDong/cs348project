@@ -3,6 +3,7 @@ var GenresSql = require("../sql/genresSql");
 var WritersDirectorsSql = require("../sql/writersDirectorsSql");
 var PrincipalsSql = require("../sql/principalsSql");
 var UserReviewSql = require("../sql/userReviewSql");
+var Constants = require("../constants")
 
 /* Get data for a particular movie (reviews and metadata such as: genre, year, director, actors, crew, etc.)
 Example request:
@@ -177,22 +178,44 @@ exports.getAllHighestRated = function (req, res, connection) {
   );
 };
 
-exports.getMovies = function (req, res, connection) {
-  connection.query(
-    TitlesSql.retrieveMovies,
-    [],
-    function (error, results, fields) {
-      if (error) {
-        res.status(400);
-        res.send(JSON.stringify(error));
-        return;
-      }
-      res.send(
-        JSON.stringify({
-          movies: results,
-        })
-      );
-    }
+exports.getMovies = async function (req, res, connectionPromise) {
+  const connection = await connectionPromise;
+  var cursor = req.query.cursor;
+
+  // If there is no cursor, set it to the first movie
+  if (cursor === undefined) {
+    cursor = 'tt0000000'
+  }
+  console.log("x cursor: ", cursor)
+
+  const [results, fields1] = await connection.execute(
+    TitlesSql.retrieveMoviesPaginated,
+    [cursor, Constants.PAGE_SIZE]
+  );
+
+  // Get the next cursor
+  var nextCursor = '';
+  if (results.length > 0) {
+    nextCursor = results[results.length - 1].titleId;
+  }
+
+  const [checkHasMore, fields2] = await connection.execute(
+    TitlesSql.checkHasMore,
+    [nextCursor]
+  );
+
+  console.log("x checkHasMore: ", checkHasMore)
+
+  // If there are no more results, set the next cursor to empty
+  if (checkHasMore[0].hasMore == 0) {
+    nextCursor = '';
+  }
+
+  res.send(
+    JSON.stringify({
+      movies: results,
+      nextCursor: nextCursor
+    })
   );
 };
 

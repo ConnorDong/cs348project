@@ -67,6 +67,9 @@ create table TitleBasics (
     endYear numeric,
     runtimeMinutes numeric
 );
+
+CREATE INDEX idx_tconst ON TitleBasics (tconst);
+
 LOAD DATA 
 	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/titleBasics.tsv' 
     INTO TABLE TitleBasics
@@ -144,6 +147,9 @@ create table Users (
     username varchar(255),
     password varchar(255)
 );
+
+CREATE INDEX idx_userId ON Users (userId);
+
 -- Define a trigger to return the userId after insertion into Users
 CREATE TRIGGER ai_Users
 AFTER INSERT ON Users
@@ -178,4 +184,3 @@ create table UserFollows (
 );
 
 show tables;
-

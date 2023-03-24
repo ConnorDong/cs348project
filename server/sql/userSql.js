@@ -1,6 +1,13 @@
 exports.getAll = `
     select userId, username from Users
+    where userId > ?
+    order by userId
+    limit ?
 `;
+
+exports.getAllCheckLast = `
+    select exists (select * from Users where userId > ? order by userId) as hasMore;
+`
 
 exports.getByUserId = `
     select userId, username from Users

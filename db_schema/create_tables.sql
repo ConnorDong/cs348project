@@ -29,6 +29,8 @@ create table TitleBasics (
     runtimeMinutes numeric
 );
 
+CREATE INDEX idx_tconst ON TitleBasics (tconst);
+
 -- TitleRatings
 create table TitleRatings (
 	tconst varchar(9) primary key,
@@ -78,6 +80,9 @@ create table Users (
     username varchar(255),
     password varchar(255)
 );
+
+CREATE INDEX idx_userId ON Users (userId);
+
 -- Define a trigger to return the userId after insertion into Users
 CREATE TRIGGER ai_Users
 AFTER INSERT ON Users
