@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Movies.module.css";
 import { Group, Button, Card, Text, Stack, Center } from "@mantine/core";
-import { Star } from "tabler-icons-react";
+import { Space, Star } from "tabler-icons-react";
 
-export default function Movies({ movies, initialNextCursor }) {
+export default function Genre({ genreInfo, movies, initialNextCursor }) {
   const [paginatedMovies, setPaginatedMovies] = useState(movies);
   const [nextCursor, setNextCursor] = useState(initialNextCursor);
 
   const loadMore = async () => {
-    const res = await fetch(`${process.env.HOST}/movies?cursor=${nextCursor}`);
+    const res = await fetch(
+      `${process.env.HOST}/moviesByGenre?genre=${genreInfo.genre}&cursor=${nextCursor}`
+    );
     const data = await res.json();
     setPaginatedMovies([...paginatedMovies, ...data?.movies]);
     setNextCursor(data?.nextCursor);
@@ -18,9 +20,9 @@ export default function Movies({ movies, initialNextCursor }) {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Movies</h1>
+        <h1 className={styles.title}>{genreInfo.genre}</h1>
         <p className={styles.description}>
-          A directory of all movies in MovieDB
+          A directory of all {genreInfo.genre} movies in MovieDB
         </p>
       </div>
       <Stack>
@@ -74,10 +76,15 @@ export default function Movies({ movies, initialNextCursor }) {
   );
 }
 
-Movies.getInitialProps = async (ctx) => {
-  // const res = await fetch(`${process.env.HOST}/movies`);
-  const res = await fetch(`${process.env.HOST}/movies?cursor=tt0000001`);
+Genre.getInitialProps = async (ctx) => {
+  const genre = ctx.query.genre;
+  const res = await fetch(`${process.env.HOST}/moviesByGenre?genre=${genre}`);
   const data = await res.json();
+  console.log(data);
 
-  return { movies: data?.movies, initialNextCursor: data?.nextCursor };
+  return {
+    genreInfo: data?.genreInfo,
+    movies: data?.movies,
+    initialNextCursor: data?.nextCursor,
+  };
 };
