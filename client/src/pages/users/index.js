@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Users.module.css";
-import { Group, Badge, Card, Text, Stack, Center } from "@mantine/core";
+import {
+  Group,
+  Badge,
+  Card,
+  Text,
+  Stack,
+  Center,
+  Pagination,
+} from "@mantine/core";
 import { ExternalLink } from "tabler-icons-react";
 
 export default function Users({ server_users }) {
@@ -44,7 +52,6 @@ export default function Users({ server_users }) {
       fetchUser();
     }
   }, []);
-  console.table(loggedInUserInfo);
 
   return (
     <div className={styles.container}>
@@ -115,5 +122,5 @@ Users.getInitialProps = async (ctx) => {
   const res = await fetch(`${process.env.HOST}/users`);
   const data = await res.json();
 
-  return { server_users: data?.data };
+  return { server_users: data?.data?.users };
 };

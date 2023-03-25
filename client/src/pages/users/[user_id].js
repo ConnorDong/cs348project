@@ -372,19 +372,21 @@ export default function User({ data }) {
                                   justifyContent: "center",
                                 }}
                               >
-                                <Button
-                                  variant="light"
-                                  color="red"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    removeTitleFromWatchlist(
-                                      watchlist.watchListId,
-                                      movie.tconst
-                                    );
-                                  }}
-                                >
-                                  Remove from Watchlist
-                                </Button>
+                                {authToken?.userId === user?.[0]?.userId ? (
+                                  <Button
+                                    variant="light"
+                                    color="red"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      removeTitleFromWatchlist(
+                                        watchlist.watchListId,
+                                        movie.tconst
+                                      );
+                                    }}
+                                  >
+                                    Remove from Watchlist
+                                  </Button>
+                                ) : null}
                                 <ExternalLink size={28} strokeWidth={2} />
                               </Flex>
                             </Group>
