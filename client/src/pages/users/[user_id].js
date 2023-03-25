@@ -25,7 +25,6 @@ export default function User({ data }) {
 
   const { user, followers, following, reviews, watchlists } = data?.data;
   const [userWatchlists, setUserWatchLists] = useState(watchlists);
-  console.table(data);
 
   // Get logged in user's id
   const [authToken, setAuthToken] = useState(null);
@@ -86,25 +85,21 @@ export default function User({ data }) {
       });
   };
 
-  // Handles adding title to a watchlist
-  // const handleAddTitleToWatchlist = (reviewId) => {
-  //   // Make API call to delete review with reviewId
-  //   fetch(`${process.env.HOST}/review/delete`, {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  //     body: new URLSearchParams({ reviewId }),
-  //   }).then((res) => {
-  //     if (res.status === 200) {
-  //       // Remove review from reviews array
-  //       const newReviews = userReviews.filter(
-  //         (review) => review.reviewId !== reviewId
-  //       );
-  //       setUserReviews(newReviews);
-  //     }
-  //   });
-  // };
-
   // Handles removing title from a watchlist
+  const removeTitleFromWatchlist = (listId, tconst) => {
+    fetch(`${process.env.HOST}/watchlists/remove`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        listId,
+        tconst,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        router.reload(window.location.pathname);
+      });
+  };
 
   // Handles following a user
   const followUser = () => {
@@ -123,13 +118,13 @@ export default function User({ data }) {
   };
 
   // Handles unfollowing a user
-  const unfollowUser = () => {
+  const unfollowUser = (userFollowsId) => {
     fetch(`${process.env.HOST}/followers/unfollow`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         userId: authToken?.userId,
-        userFollowsId: user?.[0]?.userId,
+        userFollowsId,
       }),
     })
       .then((res) => res.json())
@@ -182,7 +177,11 @@ export default function User({ data }) {
             </Flex>
             {authToken?.userId ===
             user?.[0]?.userId ? null : isLoggedInUserFollowing ? (
-              <Button color="red" variant="filled" onClick={unfollowUser}>
+              <Button
+                color="red"
+                variant="filled"
+                onClick={() => unfollowUser(user?.[0]?.userId)}
+              >
                 Unfollow
               </Button>
             ) : (
@@ -213,11 +212,13 @@ export default function User({ data }) {
               </Accordion.Control>
               <Accordion.Panel>
                 <Stack mt="5px">
-                  {following?.map((user) => (
+                  {following?.map((following_user) => (
                     <Link
-                      href={`/users/${encodeURIComponent(user.userId)}`}
+                      href={`/users/${encodeURIComponent(
+                        following_user.userId
+                      )}`}
                       style={{ textDecoration: "none" }}
-                      key={user.userId}
+                      key={following_user.userId}
                     >
                       <Card
                         shadow="sm"
@@ -235,13 +236,31 @@ export default function User({ data }) {
                           <div>
                             <Group spacing="xs">
                               <Text fz="xl" fw={500}>
-                                {user.username}
+                                {following_user.username}
                               </Text>
                             </Group>
                           </div>
-                          <Center gap="5px">
+                          <Flex
+                            gap="lg"
+                            sx={{
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {authToken?.userId === user?.[0]?.userId ? (
+                              <Button
+                                variant="light"
+                                color="red"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  unfollowUser(following_user.userId);
+                                }}
+                              >
+                                Unfollow
+                              </Button>
+                            ) : null}
                             <ExternalLink size={28} strokeWidth={2} />
-                          </Center>
+                          </Flex>
                         </Group>
                       </Card>
                     </Link>
@@ -346,9 +365,28 @@ export default function User({ data }) {
                                   </Text>
                                 </Group>
                               </div>
-                              <Center gap="5px">
+                              <Flex
+                                gap="lg"
+                                sx={{
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Button
+                                  variant="light"
+                                  color="red"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    removeTitleFromWatchlist(
+                                      watchlist.watchListId,
+                                      movie.tconst
+                                    );
+                                  }}
+                                >
+                                  Remove from Watchlist
+                                </Button>
                                 <ExternalLink size={28} strokeWidth={2} />
-                              </Center>
+                              </Flex>
                             </Group>
                           </Card>
                         </Link>
