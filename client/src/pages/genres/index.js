@@ -2,34 +2,23 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Movies.module.css";
 import { Group, Button, Card, Text, Stack, Center } from "@mantine/core";
-import { Star } from "tabler-icons-react";
+import { Space, Star } from "tabler-icons-react";
 
-export default function Movies({ movies, initialNextCursor }) {
-  const [paginatedMovies, setPaginatedMovies] = useState(movies);
-  const [nextCursor, setNextCursor] = useState(initialNextCursor);
-
-  const loadMore = async () => {
-    const res = await fetch(`${process.env.HOST}/movies?cursor=${nextCursor}`);
-    const data = await res.json();
-    setPaginatedMovies([...paginatedMovies, ...data?.movies]);
-    setNextCursor(data?.nextCursor);
-  };
-
+export default function Genres({ genres }) {
+  console.log(genres);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Movies</h1>
-        <p className={styles.description}>
-          A directory of all movies in MovieDB
-        </p>
+        <h1 className={styles.title}>Genres</h1>
+        <p className={styles.description}>View movies by genre</p>
       </div>
       <Stack>
-        {paginatedMovies?.length &&
-          paginatedMovies.map((movie) => (
+        {genres?.length &&
+          genres.map((genre) => (
             <Link
-              href={`/movies/${encodeURIComponent(movie.titleId)}`}
+              href={`/genres/${encodeURIComponent(genre.genre)}`}
               style={{ textDecoration: "none" }}
-              key={movie.titleId}
+              key={genre.genre}
             >
               <Card
                 shadow="sm"
@@ -47,37 +36,39 @@ export default function Movies({ movies, initialNextCursor }) {
                   <div>
                     <Group spacing="xs">
                       <Text fz="xl" fw={500}>
-                        {movie.title}
+                        {genre.genre}
                       </Text>
-                      <Text color="dimmed">({movie.year})</Text>
+                      <Text color="dimmed">({genre.count} movies)</Text>
                     </Group>
 
-                    <Text>{movie.genre}</Text>
+                    <Text>{genre.description}</Text>
                   </div>
                   <Center gap="5px">
+                    <Text fz="lg" ml="0.3rem" mr="0.3rem">
+                      Average Rating:
+                    </Text>
                     <Star
                       size={28}
                       strokeWidth={2}
                       color={"rgb(233, 196, 106)"}
                     />
                     <Text fz="lg" fw={700} ml="0.3rem">
-                      {movie.ratings}
+                      {genre.averageRating.toFixed(1)}
                     </Text>
                   </Center>
                 </Group>
               </Card>
             </Link>
           ))}
-        <Button onClick={loadMore}>Load More</Button>
       </Stack>
     </div>
   );
 }
 
-Movies.getInitialProps = async (ctx) => {
-  // const res = await fetch(`${process.env.HOST}/movies`);
-  const res = await fetch(`${process.env.HOST}/movies?cursor=tt0000001`);
+Genres.getInitialProps = async (ctx) => {
+  const res = await fetch(`${process.env.HOST}/genres`);
   const data = await res.json();
+  console.log(data);
 
-  return { movies: data?.movies, initialNextCursor: data?.nextCursor };
+  return { genres: data?.data };
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "@/styles/Movie.module.css";
@@ -16,6 +16,7 @@ import {
   Flex,
   Space,
   Accordion,
+  Select,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Star, Plus, Trash } from "tabler-icons-react";
@@ -33,24 +34,49 @@ export default function Movie({ data, tmdb_data }) {
     voteCount,
     reviews,
   } = data;
-  console.table(data);
   const [userReviews, setUserReviews] = useState(reviews);
 
   // Get logged in user's id
   const [authToken, setAuthToken] = useState(null);
+  const [userWatchlists, setUserWatchlists] = useState();
+
   useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch(`${process.env.HOST}/users/${auth_json.userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      });
+      const data = await res.json();
+      // Put user's watchlists in state
+      setUserWatchlists(data?.data?.watchlists);
+    };
+
     const auth_token = localStorage.getItem("auth_token");
     const auth_json = auth_token ? JSON.parse(auth_token) : null;
     setAuthToken(auth_json);
+    if (auth_json) {
+      // Fetch logged in user's info (for watchlist info)
+      fetchUser();
+    }
   }, []);
 
   const [imageError, setImageError] = useState(false);
 
   // Modal state
-  const [opened, { open, close }] = useDisclosure(false);
+  const [
+    reviewModalOpened,
+    { open: openReviewModal, close: closeReviewModal },
+  ] = useDisclosure(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewDescription, setReviewDescription] = useState("");
   const [reviewError, setReviewError] = useState("");
+  const [
+    watchlistModalOpened,
+    { open: openWatchlistModal, close: closeWatchlistModal },
+  ] = useDisclosure(false);
+  const [selectedWatchlist, setSelectedWatchlist] = useState("");
+  const [watchlistError, setWatchlistError] = useState("");
+  const [watchlistSuccess, setWatchlistSuccess] = useState("");
 
   // Handles submitting a review (made by the logged in user)
   const handleSubmit = () => {
@@ -85,7 +111,7 @@ export default function Movie({ data, tmdb_data }) {
             setUserReviews(newReviews);
             setReviewDescription("");
             setReviewRating(5);
-            close();
+            closeReviewModal();
           }
         });
     }
@@ -109,11 +135,50 @@ export default function Movie({ data, tmdb_data }) {
     });
   };
 
+  // Handles adding title to a watchlist
+  const handleAddTitleToWatchlist = () => {
+    console.log(selectedWatchlist);
+    // Check if title is already in this watchlist, and if so, show error
+    const watchlist = userWatchlists.find(
+      (watchlist) => watchlist.watchListId === selectedWatchlist
+    );
+    console.log("titles: ", watchlist?.titles);
+    if (watchlist?.titles?.find((title) => title.tconst === titleId)) {
+      setWatchlistError(`${title} is already in this watchlist.`);
+      return;
+    }
+
+    // Else, ake API call to delete review with reviewId
+    fetch(`${process.env.HOST}/watchlists/append`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ listId: selectedWatchlist, tconst: titleId }),
+    }).then((res) => {
+      if (res.status === 200) {
+        // Add title to userWatchlists locally
+        const newWatchlists = userWatchlists.map((watchlist) => {
+          if (watchlist.watchListId === selectedWatchlist) {
+            return {
+              ...watchlist,
+              titles: [
+                ...watchlist.titles,
+                { tconst: titleId, primaryTitle: title },
+              ],
+            };
+          }
+          return watchlist;
+        });
+        setUserWatchlists(newWatchlists);
+        setWatchlistSuccess("Title added to watchlist!");
+      }
+    });
+  };
+
   return (
     <>
       <Modal
-        opened={opened}
-        onClose={close}
+        opened={reviewModalOpened}
+        onClose={closeReviewModal}
         title="Write a Review"
         size="lg"
         centered
@@ -140,6 +205,54 @@ export default function Movie({ data, tmdb_data }) {
           />
           <Button color="blue" variant="filled" onClick={handleSubmit}>
             Submit Review
+          </Button>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={watchlistModalOpened}
+        onClose={() => {
+          closeWatchlistModal();
+          setWatchlistSuccess("");
+        }}
+        title={
+          <Text>
+            Add <b>{title}</b> to a watchlist
+          </Text>
+        }
+        size="lg"
+        centered
+      >
+        <Stack>
+          <Select
+            value={selectedWatchlist}
+            onChange={(value) => {
+              setSelectedWatchlist(value);
+              setWatchlistError("");
+            }}
+            name="selectWatchlist"
+            label="Select the watchlist you want to add to (remove titles on your profile page):"
+            withAsterisk
+            dropdownPosition="bottom"
+            initiallyOpened={true}
+            data={userWatchlists?.map((watchlist) => ({
+              value: watchlist.watchListId,
+              label: watchlist.name,
+            }))}
+          />
+          <Space h="250px" />
+          {watchlistError ? <Text color="red">{watchlistError}</Text> : null}
+          {watchlistSuccess ? (
+            <Text color="green">{watchlistSuccess}</Text>
+          ) : null}
+          <Button
+            color="blue"
+            variant="filled"
+            onClick={() => {
+              setWatchlistSuccess("");
+              handleAddTitleToWatchlist();
+            }}
+          >
+            Add to Watchlist
           </Button>
         </Stack>
       </Modal>
@@ -174,6 +287,15 @@ export default function Movie({ data, tmdb_data }) {
             <Text>{writers}</Text>
           </div>
         </div>
+        <Button
+          color="blue"
+          variant="filled"
+          maw="180px"
+          mb="15px"
+          onClick={openWatchlistModal}
+        >
+          + Add to Watchlist
+        </Button>
         {portrayals?.length ? (
           <Accordion defaultValue="customization" mb="xl">
             <Accordion.Item value="customization">
@@ -185,7 +307,10 @@ export default function Movie({ data, tmdb_data }) {
               <Accordion.Panel>
                 <Stack>
                   {portrayals?.map((portrayal) => (
-                    <Flex sx={{ alignItems: "center" }}>
+                    <Flex
+                      sx={{ alignItems: "center" }}
+                      key={portrayal.actorName}
+                    >
                       <Text fz="1.4rem" fw={500}>
                         {portrayal.actorName}
                       </Text>
@@ -194,7 +319,7 @@ export default function Movie({ data, tmdb_data }) {
                       <Space w="xs" />
                       <Flex gap="md">
                         {portrayal.portrays.map((role) => (
-                          <Text fz="xl" fw={500}>
+                          <Text fz="xl" fw={500} key={role}>
                             {role}
                           </Text>
                         ))}
@@ -224,7 +349,12 @@ export default function Movie({ data, tmdb_data }) {
         )}
         <Group spacing="xs">
           <h1 className={styles.secondarytitle}>Reviews</h1>
-          <ActionIcon color="blue" variant="filled" mt="0.5rem" onClick={open}>
+          <ActionIcon
+            color="blue"
+            variant="filled"
+            mt="0.5rem"
+            onClick={openReviewModal}
+          >
             <Plus size={48} strokeWidth={2} color={"black"} />
           </ActionIcon>
         </Group>
