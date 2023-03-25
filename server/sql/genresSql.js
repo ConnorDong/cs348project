@@ -18,11 +18,27 @@ exports.genresByCount = `
 // List genres with the highest average rating
 exports.genresByPopularity = `
     select * from
-     (select g.genre, avg(tr.averageRating) as averageRating, sum(tr.numVotes) as numVotes
+     (select g.genre, description, count(*) as count, avg(tr.averageRating) as averageRating, sum(tr.numVotes) as numVotes
      from Genres as g
      join TitleRatings as tr
      on g.tconst = tr.tconst
+     left join GenreInfo as gi on g.genre = gi.genre
      group by genre
     ) as gtr
+    order by gtr.averageRating desc, gtr.numVotes desc;
+`
+
+// Get genre info for a specific genre
+// List genres with the highest average rating
+exports.genresInfoByGenre = `
+    select * from
+     (select g.genre, description, count(*) as count, avg(tr.averageRating) as averageRating, sum(tr.numVotes) as numVotes
+     from Genres as g
+     join TitleRatings as tr
+     on g.tconst = tr.tconst
+     left join GenreInfo as gi on g.genre = gi.genre
+     group by genre
+    ) as gtr
+    where genre=?
     order by gtr.averageRating desc, gtr.numVotes desc;
 `

@@ -2,6 +2,7 @@ var UserSql = require("../sql/userSql");
 var UserFollowsSql = require("../sql/userFollowsSql");
 var UserReview = require("../sql/userReviewSql");
 var WatchListSql = require("../sql/watchListSql");
+var Constants = require("../constants")
 
 /* Register user with username and password
 Example request:
@@ -94,21 +95,46 @@ exports.login = function (req, res, connection) {
 };
 
 /* Get a list of users in the database */
-exports.getAll = function (req, res, connection) {
-  connection.query(UserSql.getAll, function (error, results, fields) {
-    if (error) {
-      res.status(400);
-      res.send(JSON.stringify(error));
-      return;
-    }
+exports.getAll = async function (req, res, connectionPromise) {
+  const connection = await connectionPromise;
 
-    res.send(
-      JSON.stringify({
-        message: "Successfully retrieved users",
-        data: results,
-      })
-    );
-  });
+  var cursor = req.query.cursor;
+  // If there is no cursor, set it to the first movie
+  if (cursor === undefined) {
+    cursor = '0'
+  }
+  
+  const [results, fields1] = await connection.execute(
+    UserSql.getAll,
+    [cursor, Constants.PAGE_SIZE]
+  );
+
+  // Get the next cursor
+  var nextCursor = '';
+  if (results.length > 0) {
+     nextCursor = results[results.length - 1].userId;
+  }
+
+  const [checkHasMore, fields2] = await connection.execute(
+    UserSql.getAllCheckLast,
+    [nextCursor]
+  );
+
+  // If there are no more results, set the next cursor to empty
+  if (checkHasMore[0].hasMore == 0) {
+    nextCursor = '';
+  }
+  
+
+  res.send(
+    JSON.stringify({
+      message: "Successfully retrieved users",
+      data: {
+        users: results,
+        nextCursor: nextCursor
+      },
+    })
+  );
 }
 
 /* 

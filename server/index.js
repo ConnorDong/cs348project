@@ -59,13 +59,8 @@ app.get("/titles/getHighestRated", (req, res) => {
 });
 
 // Genres ---------------------------------------------------------------------
-// List genres
+// List genres and genre info
 app.get("/genres", (req, res) => {
-  GenresController.listGenres(req, res, connection);
-});
-
-// Group genres by average rating
-app.get("/genres/topRated", (req, res) => {
   GenresController.listGenresByRating(req, res, connection);
 });
 
@@ -87,7 +82,7 @@ app.post("/login", (req, res) => {
 
 // List users
 app.get("/users", (req, res) => {
-  UserController.getAll(req, res, connection);
+  UserController.getAll(req, res, connectionPromise);
 });
 
 // Get user page
@@ -143,7 +138,11 @@ app.get("/followers/get/:userId", (req, res) => {
 });
 
 app.get("/movies", (req, res) => {
-  TitleController.getMovies(req, res, connection);
+  TitleController.getMovies(req, res, connectionPromise);
+});
+
+app.get("/moviesByGenre", (req, res) => {
+  TitleController.getMoviesByGenre(req, res, connectionPromise);
 });
 
 app.post("/movie/details", (req, res) => {
