@@ -4,7 +4,17 @@ import styles from "@/styles/Movies.module.css";
 import { Group, Button, Card, Text, Stack, Center } from "@mantine/core";
 import { Star } from "tabler-icons-react";
 
-export default function Movies({ movies }) {
+export default function Movies({ movies, initialNextCursor }) {
+  const [paginatedMovies, setPaginatedMovies] = useState(movies);
+  const [nextCursor, setNextCursor] = useState(initialNextCursor);
+
+  const loadMore = async () => {
+    const res = await fetch(`${process.env.HOST}/movies?cursor=${nextCursor}`);
+    const data = await res.json();
+    setPaginatedMovies([...paginatedMovies, ...data?.movies]);
+    setNextCursor(data?.nextCursor);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -14,8 +24,8 @@ export default function Movies({ movies }) {
         </p>
       </div>
       <Stack>
-        {movies?.length &&
-          movies.map((movie) => (
+        {paginatedMovies?.length &&
+          paginatedMovies.map((movie) => (
             <Link
               href={`/movies/${encodeURIComponent(movie.titleId)}`}
               style={{ textDecoration: "none" }}
@@ -58,14 +68,17 @@ export default function Movies({ movies }) {
               </Card>
             </Link>
           ))}
+        <Button onClick={loadMore}>Load More</Button>
       </Stack>
     </div>
   );
 }
 
 Movies.getInitialProps = async (ctx) => {
-  const res = await fetch(`${process.env.HOST}/movies`);
+  // const res = await fetch(`${process.env.HOST}/movies`);
+  const res = await fetch(`${process.env.HOST}/movies?cursor=tt0000001`);
   const data = await res.json();
+  console.log(data);
 
-  return { movies: data?.movies };
+  return { movies: data?.movies, initialNextCursor: data?.nextCursor };
 };

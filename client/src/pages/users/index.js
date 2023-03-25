@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Users.module.css";
-import {
-  Group,
-  Badge,
-  Card,
-  Text,
-  Stack,
-  Center,
-  Pagination,
-} from "@mantine/core";
+import { Group, Badge, Card, Text, Stack, Center } from "@mantine/core";
 import { ExternalLink } from "tabler-icons-react";
 
 export default function Users({ server_users }) {

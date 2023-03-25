@@ -214,13 +214,14 @@ export default function Movie({ data, tmdb_data }) {
           closeWatchlistModal();
           setWatchlistSuccess("");
         }}
-        title="Manage Watchlists"
+        title={
+          <Text>
+            Add <b>{title}</b> to a watchlist
+          </Text>
+        }
         size="lg"
         centered
       >
-        <Text>
-          Add <b>{title}</b> to a watchlist
-        </Text>
         <Stack>
           <Select
             value={selectedWatchlist}
@@ -229,7 +230,7 @@ export default function Movie({ data, tmdb_data }) {
               setWatchlistError("");
             }}
             name="selectWatchlist"
-            label="Select the watchlist you want to add to (remove titles in Your Profile):"
+            label="Select the watchlist you want to add to (remove titles on your profile page):"
             withAsterisk
             dropdownPosition="bottom"
             initiallyOpened={true}
@@ -289,11 +290,11 @@ export default function Movie({ data, tmdb_data }) {
         <Button
           color="blue"
           variant="filled"
-          maw="200px"
+          maw="180px"
           mb="15px"
           onClick={openWatchlistModal}
         >
-          Manage Watchlists
+          + Add to Watchlist
         </Button>
         {portrayals?.length ? (
           <Accordion defaultValue="customization" mb="xl">
