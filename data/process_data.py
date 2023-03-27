@@ -13,12 +13,12 @@ def splitColumnToList(df, name, sep=','):
     return df[name].apply(lambda x: x.split(sep))
 
 class ProcessData:
-    def getNameBasics(self, nrows=None):
+    def getNameBasics(self):
         # --------------------------------------------------------------------------------
         # process NameBasics
         nameBasics = pd.read_csv("raw/name.basics.tsv",
             sep='\t', 
-            nrows=nrows,
+            nrows=3000000,
             na_values="\\N")
 
         # cast multivalued attributes from string to list
@@ -141,8 +141,8 @@ class ProcessData:
 
 if __name__ == "__main__":
     p = ProcessData()
-    MAX_ROWS=100
-    p.getNameBasics(MAX_ROWS)
+    MAX_ROWS=1000
+    p.getNameBasics()
     p.getTitleBasics(MAX_ROWS)
     p.getTitleRatings(MAX_ROWS)
     p.getTitleCrew(MAX_ROWS)
