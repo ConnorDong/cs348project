@@ -291,7 +291,8 @@ export default function Movie({ data, tmdb_data }) {
           color="blue"
           variant="filled"
           maw="180px"
-          mb="15px"
+          mt="15px"
+          mb="20px"
           onClick={openWatchlistModal}
         >
           + Add to Watchlist
