@@ -9,7 +9,8 @@ where Genres.tconst = titleId
 group by tconst
 ) as genre
 from TitleBasics
-natural inner join TitleRatings;
+natural inner join TitleRatings
+limit 10;
 
 start transaction;
 insert into UserReview
@@ -58,42 +59,3 @@ where TitleBasics.tconst='tt0000001';
 select reviewId, username, Round(rating, 1) as rating, description as comment from UserReview
    natural inner join Users
    where tconst='tt0000001';  
-
-select userId, username from Users
-    where userId > '601876bb-8b8b-4558-8a79-e9d70ff76b46'
-    order by userId
-    limit 5;
-
-select userId, username from Users
-    where userId='601876bb-8b8b-4558-8a79-e9d70ff76b46';
-   
-select u.userId, u.username from UserFollows as uf
-    join Users as u on uf.userId=u.userId
-    where followsUserId='601876bb-8b8b-4558-8a79-e9d70ff76b46';
-   
-select u.userId, u.username from UserFollows as uf
-    join Users as u on uf.followsUserId=u.userId
-    where uf.userId='601876bb-8b8b-4558-8a79-e9d70ff76b46';
-
-select tb.tconst, primaryTitle, reviewId, userId, rating, description  from UserReview
-    join TitleBasics as tb on UserReview.tconst=tb.tconst
-    where userId='601876bb-8b8b-4558-8a79-e9d70ff76b46';
-
-select * from WatchList
-    where userId='601876bb-8b8b-4558-8a79-e9d70ff76b46';
-
-/*
-START TRANSACTION;
-    insert into WatchList
-    values ('02406dbb-ec32-4454-803e-6c8ada55786c', '601876bb-8b8b-4558-8a79-e9d70ff76b46', 'Test List Name');
-    select @last_uuid as listId;
-COMMIT;
-
-delete from WatchList
-    where listId='02406dbb-ec32-4454-803e-6c8ada55786c';
-
-insert into UserFollows values ('c67fc6f1-d219-4bcd-8921-f8117ab6169a', '601876bb-8b8b-4558-8a79-e9d70ff76b46');
-
-delete from UserFollows
-    where userId='c67fc6f1-d219-4bcd-8921-f8117ab6169a' and followsUserId='601876bb-8b8b-4558-8a79-e9d70ff76b46'
-*/

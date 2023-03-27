@@ -9,7 +9,6 @@ exports.getWatchListItems = `
     where listId=?
 `
 
-
 exports.createWatchList = `
 START TRANSACTION;
     insert into WatchList
