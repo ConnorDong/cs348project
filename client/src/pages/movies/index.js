@@ -68,7 +68,7 @@ export default function Movies({ movies, initialNextCursor }) {
               </Card>
             </Link>
           ))}
-        <Button onClick={loadMore}>Load More</Button>
+        {nextCursor != '' && <Button onClick={loadMore}>Load More</Button>}
       </Stack>
     </div>
   );
@@ -76,7 +76,7 @@ export default function Movies({ movies, initialNextCursor }) {
 
 Movies.getInitialProps = async (ctx) => {
   // const res = await fetch(`${process.env.HOST}/movies`);
-  const res = await fetch(`${process.env.HOST}/movies?cursor=tt0000001`);
+  const res = await fetch(`${process.env.HOST}/movies?cursor=tt0000000`);
   const data = await res.json();
 
   return { movies: data?.movies, initialNextCursor: data?.nextCursor };
