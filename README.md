@@ -117,6 +117,6 @@ The motivation of this feature is to add additional interactivity between users.
 #6
 
 ![Model](/pic/genres.png)
-![Model](/pic/genres_movies.png)
+![Model](/pic/genre_movies.png)
 
 This feature allows users to look at all the possible genres in the database with a listed view of genres with descriptions and average ratings. In addition, choosing a genre displays the movies that fall under the same genre.
