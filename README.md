@@ -84,8 +84,10 @@ Run the client:
 #1
 
 ![Model](/pic/all_movies.png)
+![Model](/pic/all_movies_2.png)
 
 The users of this feature are the users looking to view all movies provided. The user interacts with this feature by selecting movies from the navigation bar and the application displays all movies stored in the database. 
+Pagination is added to the list of movies with the ability to load more movies every 10 movies shown for users who wish to see more movies. The user interacts with this feature by clicking the Load More button and more movies will appear down the page.
 
 #2
 
