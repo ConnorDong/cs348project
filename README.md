@@ -107,3 +107,9 @@ We allow application users to register their own user profile with a username an
 
 Users can retrieve detailed information about a title by clicking on a title from the list of titles page. In addition to the information from the general browse page, this will show information such as the year that the title was released, the genres that the title is associated with, a list of actors/writers/directors involved in the making of the title, as well as a list of reviews created by other users.
 
+#5
+
+![Model](/pic/user_page.png)
+![Model](/pic/user_profile.png)
+![Model](/pic/watchlist.png)
+The motivation of this feature is to add additional interactivity between users. In addition to being able to create movie reviews (implemented in Milestone 1), we wanted to allow users to view information about other users, allow users to create their own watch lists and view other users’ watch lists, as well as the ability to follow other users.
