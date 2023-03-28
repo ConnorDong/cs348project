@@ -113,3 +113,10 @@ Users can retrieve detailed information about a title by clicking on a title fro
 ![Model](/pic/user_profile.png)
 ![Model](/pic/watchlist.png)
 The motivation of this feature is to add additional interactivity between users. In addition to being able to create movie reviews (implemented in Milestone 1), we wanted to allow users to view information about other users, allow users to create their own watch lists and view other users’ watch lists, as well as the ability to follow other users.
+
+#6
+
+![Model](/pic/genres.png)
+![Model](/pic/genres_movies.png)
+
+This feature allows users to look at all the possible genres in the database with a listed view of genres with descriptions and average ratings. In addition, choosing a genre displays the movies that fall under the same genre.
