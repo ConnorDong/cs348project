@@ -84,8 +84,10 @@ Run the client:
 #1
 
 ![Model](/pic/all_movies.png)
+![Model](/pic/all_movies_2.png)
 
 The users of this feature are the users looking to view all movies provided. The user interacts with this feature by selecting movies from the navigation bar and the application displays all movies stored in the database. 
+Pagination is added to the list of movies with the ability to load more movies every 10 movies shown for users who wish to see more movies. The user interacts with this feature by clicking the Load More button and more movies will appear down the page.
 
 #2
 
@@ -105,3 +107,16 @@ We allow application users to register their own user profile with a username an
 
 Users can retrieve detailed information about a title by clicking on a title from the list of titles page. In addition to the information from the general browse page, this will show information such as the year that the title was released, the genres that the title is associated with, a list of actors/writers/directors involved in the making of the title, as well as a list of reviews created by other users.
 
+#5
+
+![Model](/pic/user_page.png)
+![Model](/pic/user_profile.png)
+![Model](/pic/watchlist.png)
+The motivation of this feature is to add additional interactivity between users. In addition to being able to create movie reviews (implemented in Milestone 1), we wanted to allow users to view information about other users, allow users to create their own watch lists and view other users’ watch lists, as well as the ability to follow other users.
+
+#6
+
+![Model](/pic/genres.png)
+![Model](/pic/genre_movies.png)
+
+This feature allows users to look at all the possible genres in the database with a listed view of genres with descriptions and average ratings. In addition, choosing a genre displays the movies that fall under the same genre.
