@@ -122,4 +122,7 @@ INSERT INTO `WatchListItem` (`listId`, `tconst`) VALUES
 ('a7b7f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002'),
 ('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000003'),
 ('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000004'),
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000001');
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002');
 ('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000005');
+

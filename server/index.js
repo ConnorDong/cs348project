@@ -9,6 +9,7 @@ var FollowController = require("./controllers/userFollowsController");
 var TitleController = require("./controllers/titleController");
 var GenresController = require("./controllers/genresController");
 var WatchListController = require("./controllers/watchListController");
+var RecommendationController = require("./controllers/recommendationController");
 var TitlesSql = require("./sql/titlesSql");
 
 const PORT = 5001;
@@ -147,6 +148,12 @@ app.get("/moviesByGenre", (req, res) => {
 
 app.post("/movie/details", (req, res) => {
   TitleController.getMovieDetails(req, res, connectionPromise);
+});
+
+// Recommendations ------------------------------------------------------------
+// Get recommendations for a user
+app.get("/recommendations/:userId", (req, res) => {
+  RecommendationController.getRecommendationForUser(req, res, connection);
 });
 
 app.listen(PORT, (error) => {

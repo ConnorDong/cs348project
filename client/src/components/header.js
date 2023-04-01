@@ -74,6 +74,25 @@ export default function CustomHeader() {
                 >
                   Users
                 </Button>
+                {/* Recommendations */}
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
+                  onClick={() => router.push("/recommendations")}
+                >
+                  Recommendations
+                </Button>
+                {/* Stats page */}
+                {/* Recommendations */}
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
+                  onClick={() => router.push("/stats")}
+                >
+                  Stats
+                </Button>
                 <Button
                   variant="subtle"
                   color="gray"
