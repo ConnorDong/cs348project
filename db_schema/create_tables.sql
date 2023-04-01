@@ -140,4 +140,34 @@ create table WatchListItem (
     foreign key (tconst) references TitleBasics(tconst)
 );
 
+-- ------ Tables for fancy feature: RBAC
+create table Roles (
+    roleId varchar(255) primary key,
+    name varchar(255) unique not null
+);
+
+create table Permissions (
+    permissionId varchar(255) primary key,
+    permissionName varchar(255) unique not null,
+    description varchar(255)
+);
+
+-- UserRole table (mapping users to roles)
+create table UserRoles (
+    userId varchar(255),
+    roleId varchar(255),
+    primary key (userId, roleId),
+    foreign key (userId) references Users(userId),
+    foreign key (roleId) references Roles(roleId)
+);
+
+-- RolePermission table (mapping roles to permissions)
+create table RolePermissions (
+    roleId varchar(255),
+    permissionId varchar(255),
+    primary key (roleId, permissionId),
+    foreign key (roleId) references Roles(roleId),
+    foreign key (permissionId) references Permissions(permissionId)
+);
+
 show tables;

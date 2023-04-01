@@ -97,6 +97,14 @@ export default function CustomHeader() {
                   variant="subtle"
                   color="gray"
                   h="100%"
+                  onClick={() => router.push("/admin")}
+                >
+                Admin Panel
+                </Button>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  h="100%"
                   onClick={() =>
                     router.push(`/users/${JSON.parse(authToken).userId}`)
                   }

@@ -48,11 +48,11 @@ export default function Recommendations() {
             </div>
 
             <div>
-            Recommendations are generated using a collaborative filtering algorithm. To see more recommendations, simply add movies to your watch list and get new matches based on other users' watch lists!
+                Recommendations are generated using a collaborative filtering algorithm. To see more recommendations, simply add movies to your watch list and get new matches based on other users' watch lists!
 
             </div>
 
-            
+
             <Stack>
                 {recommendations?.length
                     ? recommendations.map((recommendation) => (

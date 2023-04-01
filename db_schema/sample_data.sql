@@ -95,7 +95,8 @@ INSERT INTO `Portrays` (`tconst`, `nconst`, `portray`) VALUES
 INSERT INTO `Users` (`userId`, `username`, `password`) VALUES
 ('bcab1d5d-e34d-487f-bc67-493335499b07', 'jsmith', 'test123'),
 ('601876bb-8b8b-4558-8a79-e9d70ff76b46', 'mjane', 'helloworld'),
-('c67fc6f1-d219-4bcd-8921-f8117ab6169a', 'pacman', 'helloworld123');
+('c67fc6f1-d219-4bcd-8921-f8117ab6169a', 'pacman', 'helloworld123'),
+('00000000-00000000-00000000-00000000', 'myadmin', 'password');
 
 INSERT INTO `UserReview` (`reviewId`, `userId`, `tconst`, `rating`, `description`) VALUES
 ('7837bd50-b7ec-4d45-b66e-4932c378f078', 'bcab1d5d-e34d-487f-bc67-493335499b07', 'tt0000001', 9.6, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id laoreet felis, vitae eleifend metus. Quisque lacinia rutrum dolor ultrices blandit. Morbi mi lorem, fermentum ut lectus nec, ornare convallis felis. Ut in tristique purus, non auctor mi. Nunc ultrices ac augue nec sodales. Vivamus non risus ac purus lacinia luctus sed et purus. Cras porta, felis eget tincidunt aliquet, diam justo auctor elit, at tempus est orci et purus. Proin a lectus interdum libero.'),
@@ -122,7 +123,35 @@ INSERT INTO `WatchListItem` (`listId`, `tconst`) VALUES
 ('a7b7f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002'),
 ('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000003'),
 ('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000004'),
-('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000001');
-('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002');
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000001'),
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002'),
 ('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000005');
 
+-- Fancy feature: RBAC
+-- Inserting sample permissions
+INSERT INTO Permissions (permissionId, permissionName, description)
+VALUES ('100', 'view_data', 'View movie data'),
+       ('101', 'modify_reviews', 'Add and remove own reviews'),
+       ('102', 'modify_watchlists', 'Add and remove own watch lists'),
+       ('103', 'view_admin_panel', 'View admin panel');
+
+INSERT INTO Roles (roleId, name)
+VALUES ('1', 'Admin'), ('2', 'Viewer');
+
+-- Assign permissions to Admin role
+INSERT INTO RolePermissions (roleId, permissionId)
+VALUES ('1', '100'), ('1', '101'), ('1', '102');
+
+-- Assign permissions to Viewer role
+INSERT INTO RolePermissions (roleId, permissionId)
+VALUES ('2', '100'), ('2', '101'), ('2', '102'), ('2', '103');
+
+-- Assign viewer role to regular users
+INSERT INTO UserRoles (userId, roleId)
+VALUES ('bcab1d5d-e34d-487f-bc67-493335499b07', '1'),
+	   ('601876bb-8b8b-4558-8a79-e9d70ff76b46', '1'),
+       ('c67fc6f1-d219-4bcd-8921-f8117ab6169a', '1');
+
+-- Assign admin role to the admin user
+INSERT INTO UserRoles (userId, roleId)
+VALUES ('00000000-00000000-00000000-00000000', '2');
