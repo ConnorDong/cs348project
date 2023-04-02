@@ -106,26 +106,32 @@ INSERT INTO `UserReview` (`reviewId`, `userId`, `tconst`, `rating`, `description
 -- jsmith follows mjane and pacman
 -- mjane follows jsmith and pacman
 -- pacman follows jsmith
+-- myadmin follows jsmith, mjane
 INSERT INTO `UserFollows` (`userId`, `followsUserId`) VALUES
 ('bcab1d5d-e34d-487f-bc67-493335499b07', '601876bb-8b8b-4558-8a79-e9d70ff76b46'),
 ('bcab1d5d-e34d-487f-bc67-493335499b07', 'c67fc6f1-d219-4bcd-8921-f8117ab6169a'),
 ('601876bb-8b8b-4558-8a79-e9d70ff76b46', 'bcab1d5d-e34d-487f-bc67-493335499b07'), 
 ('601876bb-8b8b-4558-8a79-e9d70ff76b46', 'c67fc6f1-d219-4bcd-8921-f8117ab6169a'),
-('c67fc6f1-d219-4bcd-8921-f8117ab6169a', 'bcab1d5d-e34d-487f-bc67-493335499b07');
+('c67fc6f1-d219-4bcd-8921-f8117ab6169a', 'bcab1d5d-e34d-487f-bc67-493335499b07'),
+('00000000-00000000-00000000-00000000', 'c67fc6f1-d219-4bcd-8921-f8117ab6169a');
 
 INSERT INTO `WatchList` (`listId`, `userId`, `listName`) VALUES 
 ('a7b7f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'bcab1d5d-e34d-487f-bc67-493335499b07', 'Untitled list'),
 ('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', '601876bb-8b8b-4558-8a79-e9d70ff76b46', "mjane's favorites"),
-('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'c67fc6f1-d219-4bcd-8921-f8117ab6169a', "pacman's watchlist");
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'c67fc6f1-d219-4bcd-8921-f8117ab6169a', "pacman's watchlist"),
+('00000000-00000000-00000000-00000000', '00000000-00000000-00000000-00000000', "the admin's watchlist");
 
 INSERT INTO `WatchListItem` (`listId`, `tconst`) VALUES
 ('a7b7f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000001'),
 ('a7b7f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002'),
+('a7b7f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000003'),
 ('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000003'),
-('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000004'),
+('f7e3c1b9-7d9b-4c5e-9d1c-0a7b6d8e1c0a', 'tt0000005'),
 ('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000001'),
 ('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000002'),
-('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000005');
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000003'),
+('b7c9f9b9-1d55-4d2c-8c0c-0a7b6d8e1c0a', 'tt0000005'),
+('00000000-00000000-00000000-00000000', 'tt0000001');
 
 -- Fancy feature: RBAC
 -- Inserting sample permissions

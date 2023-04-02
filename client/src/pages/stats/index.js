@@ -14,6 +14,7 @@ import SpriteText from 'three-spritetext';
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph = loadable(() => import('./components/forceGraph'))
 
+
 export default function Stats() {
     // Get logged in user's id
     const [stats, setStats] = useState([]);
@@ -22,15 +23,15 @@ export default function Stats() {
         const result = {
             nodes: [...Array(N).keys()].map((i) => ({ id: i })),
             links: [...Array(N).keys()]
-              .filter((id) => id)
-              .map((id) => ({
-                [reverse ? "target" : "source"]: id,
-                [reverse ? "source" : "target"]: Math.round(Math.random() * (id - 1))
-              }))
-          }
-          console.log("Result is ", result)
+                .filter((id) => id)
+                .map((id) => ({
+                    [reverse ? "target" : "source"]: id,
+                    [reverse ? "source" : "target"]: Math.round(Math.random() * (id - 1))
+                }))
+        }
+        console.log("Result is ", result)
         return result;
-      }
+    }
 
 
     // Get stats
@@ -74,7 +75,8 @@ export default function Stats() {
             {stats.moviesByGenre ? <GenrePieChart data={stats.moviesByGenre} /> : null}
 
             <h2>Actors that have starred in the most movies</h2>
-            {stats.actorsByMovieCount ? <BarChart data={stats.actorsByMovieCount} nameKey={"name"} dataKey={"num_movies"} /> : null}
+            {/* {stats.actorsByMovieCount ? <BarChart data={stats.actorsByMovieCount} nameKey={"name"} dataKey={"num_movies"} /> : null} */}
+            {stats.actorsByMovieCount ? <ActorTreemap data={stats.actorsByMovieCount} /> : null}
 
             <h2>Distribution of movie runtime (minutes)</h2>
             {stats ? <BarChart data={stats.movieRuntimeLengths} nameKey={"runtime_range"} dataKey={"num_movies"} /> : null}
@@ -82,24 +84,26 @@ export default function Stats() {
             <h2>Moving Average of Ratings (3 year window)</h2>
             {stats ? <MonoLineChart data={stats.ratingsByYear} nameKey={"startYear"} dataKey={"moving_average"} /> : null}
 
-            <h2>User social network graph</h2>
+            <h2>User social network graph (drag to rotate)</h2>
             {stats ? <ForceGraph
                 width={800}
                 height={600}
                 graphData={stats.socialNetwork}
                 nodeLabel="id"
-                linkColor={"#000000"}
                 nodeThreeObject={node => {
                     const sprite = new SpriteText(node.id);
                     sprite.color = '#ffffff';
                     sprite.textHeight = 8;
                     return sprite;
-                  }}
+                }}
+                linkColor={"#000000"}
+                linkCurvature="curvature"
+                linkCurveRotation="rotation"
+                linkDirectionalParticles={2}
                 linkWidth={1}
-                zoom={1.0}
                 backgroundColor="#1a1b1e00"
                 linkDirectionalArrowLength={5}
-                linkOpacity={1.0}
+                linkOpacity={0.5}
 
             />
 

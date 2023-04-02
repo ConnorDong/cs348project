@@ -4,8 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'rec
 const MovieReleasesByYear = ({ data, nameKey, dataKey }) => {
     return (
         <BarChart
-            width={1000}
-            height={500}
+            width={800}
+            height={400}
             data={data}
             margin={{
                 top: 20, right: 30, left: 20, bottom: 5,

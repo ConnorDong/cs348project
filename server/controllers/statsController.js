@@ -10,7 +10,18 @@ exports.getData = async function(req, res, connectionPromise) {
   const filteredMoviesByGenre = moviesByGenre.filter((row) => row.genre != null);
 
   const [actorsByMovieCount, fields3] = await connection.execute(StatsSql.actorsByMovieCount, []);
-
+  // for ApexCharts, map primaryName to x, and num_movies to y
+  // skip every other row
+  const actorsByMovieCountForChart = actorsByMovieCount.map((row, index) => {
+    if (index % 2 == 0) {
+      return null;
+    }
+    return {
+      x: row.name,
+      y: row.num_movies
+    }
+  }).filter((row) => row != null);
+  
   const [movieRuntimeLengths, fields4] = await connection.execute(StatsSql.movieRuntimeLengths, []);
   // filter out nulls from movieRuntimeLengths
   const filteredMovieRuntimeLengths = movieRuntimeLengths.filter((row) => row.runtime_range != null);
@@ -48,6 +59,8 @@ exports.getData = async function(req, res, connectionPromise) {
     return {
       source: userIdToName.get(row.userId),
       target: userIdToName.get(row.followsUserId),
+      curvature: 0.1,
+      rotation: 0.0
     }
   });
 
@@ -56,7 +69,7 @@ exports.getData = async function(req, res, connectionPromise) {
     "data": {
       "moviesPerYear": moviesPerYear,
       "moviesByGenre": filteredMoviesByGenre,
-      "actorsByMovieCount": actorsByMovieCount,
+      "actorsByMovieCount": actorsByMovieCountForChart,
       "movieRuntimeLengths": filteredMovieRuntimeLengths,
       "ratingsByYear": filteredRatingsByYear,
       "socialNetwork": {

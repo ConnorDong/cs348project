@@ -20,7 +20,7 @@ exports.actorsByMovieCount = `
     JOIN NameBasics ON Portrays.nconst = NameBasics.nconst
     GROUP BY primaryName
     ORDER BY num_movies DESC
-    LIMIT 200;
+    LIMIT 50;
 `
 
 

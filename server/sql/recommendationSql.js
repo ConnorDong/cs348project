@@ -36,6 +36,6 @@ SELECT userId, movieB AS recommended_movie, total_similarity as score, primaryTi
 FROM user_movie_similarity
 JOIN TitleBasics tb on tb.tconst = user_movie_similarity.movieB
 WHERE userId = ?
-ORDER BY total_similarity
+ORDER BY total_similarity DESC
 LIMIT 5;
 `
