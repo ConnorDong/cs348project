@@ -7,40 +7,55 @@
 - Python 3.8+ and `pip`
 - Node.js and `npm`
 
-## Download the dataset
 
-To download the [IMDB dataset](https://www.imdb.com/interfaces/), run the script
+## Creating the production database
+
+If you wish to run only the sample dataset, you can skip this section and go to the "Initialize database" part.
+
+### Download the dataset
+
+In a separate terminal change into the `data/` directory:
+```
+cd data
+```
+
+To download the [IMDB dataset](https://www.imdb.com/interfaces/), run `data/get_data.sh`:
 
 ```
 source get_data.sh
 ```
 
-This will download the raw dataset in the `./raw` directory.
+This will download the raw dataset in the `data/raw` directory.
 
-## Process the data for SQL tables
+### Process the data for SQL tables
 
 The raw dataset is not normalized for SQL tables (e.g. some columns are multivalued, which we can split into separate tables). We created a Python script `process_data.py` which performs some data preprocessing before inserting into SQL tables.
 
-To run it, first make sure you have the Python dependencies, run
+To run it, first make sure you have the Python dependencies, run (under `data/`)
 
 ```
 pip3 install -r requirements.txt
 ```
 
-Run the data processing script:
+Run the data processing script (under `data/`):
 
 ```
 python3 process_data.py
 ```
 
-The processed data will be in the `./processed` directory.
+The processed data will be in the `data/processed` directory.
 
 ## Initialize the database
+
+In a separate terminal, change into the `db_schema/` directory:
+```
+cd db_schema
+```
+
 
 First, create the database, tables and necessary triggers. Using the mysql command line from the `/db_schema` directory run `create_tables.sql`, e.g.
 
 ```
-cd db_schema
 mysql
 source create_tables.sql
 ```
@@ -54,10 +69,14 @@ Then do one of the following (in the mysql shell) depending on whether you wish 
 Whenever you make a change to the `sample_data.sql` or `production_data.sql`, you should clear the database by running `create_tables.sql` again and re-run the `sample_data.sql` or `production_data.sql` script. 
 
 ## Run the server
+In a separate terminal, change into the `server/` directory:
+```
+cd server
+```
+
 First time install: 
 
 ```
-cd server
 npm install
 ```
 
@@ -75,11 +94,13 @@ node index.js
 ```
 
 ## Frontend/Client
-
-First time:
-
+In a separate terminal, change into the `client/` directory:
 ```
 cd client
+```
+
+First time install:
+```
 npm install
 ```
 
