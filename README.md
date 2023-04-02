@@ -32,11 +32,17 @@ The processed data will be in the `./processed` directory.
 
 ## Initialize the database
 
-First, create the table schemas. Using the mysql command line from the `/db_schema` directory run `source create_tables.sql`. Then do one of the following (in the mysql shell) depending on whether you wish to load the sample or production data:
+First, create the database, tables and necessary triggers. Using the mysql command line from the `/db_schema` directory run 
 
-- To load the production dataset, run `source production_data.sql`. Note that you must replace all occurrences of "/MY/ABSOLUTE/PATH/TO/" path in the LOCAL INFILE commands in `production_data.sql` to the absolute path to the data/processed directory on your system.
+```
+source create_tables.sql
+```
 
-- To load the sample dataset, run `source sample_data.sql`
+Then do one of the following (in the mysql shell) depending on whether you wish to load the sample or production data:
+
+- To load the **production dataset**, run `source production_data.sql`. Note that you must replace all occurrences of "/MY/ABSOLUTE/PATH/TO/" path in the LOCAL INFILE commands in `production_data.sql` to the absolute path to the data/processed directory on your system.
+
+- To load the **sample dataset**, run `source sample_data.sql`
 
 Whenever you make a change to the `sample_data.sql` or `production_data.sql`, you should clear the database by running `create_tables.sql` again and re-run the `sample_data.sql` or `production_data.sql` script. 
 
