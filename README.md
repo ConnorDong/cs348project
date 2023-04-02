@@ -37,9 +37,11 @@ The processed data will be in the `./processed` directory.
 
 ## Initialize the database
 
-First, create the database, tables and necessary triggers. Using the mysql command line from the `/db_schema` directory run 
+First, create the database, tables and necessary triggers. Using the mysql command line from the `/db_schema` directory run `create_tables.sql`, e.g.
 
 ```
+cd db_schema
+mysql
 source create_tables.sql
 ```
 
