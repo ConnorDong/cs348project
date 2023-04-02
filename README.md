@@ -2,6 +2,11 @@
 
 # Setup/Run Instructions
 
+## Requirements
+- MySQL server
+- Python 3.8+ and `pip`
+- Node.js and `npm`
+
 ## Download the dataset
 
 To download the [IMDB dataset](https://www.imdb.com/interfaces/), run the script
