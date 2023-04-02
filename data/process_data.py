@@ -141,7 +141,7 @@ class ProcessData:
 
 if __name__ == "__main__":
     p = ProcessData()
-    MAX_ROWS=100000
+    MAX_ROWS=10000
     p.getNameBasics()
     p.getTitleBasics(MAX_ROWS)
     p.getTitleRatings(MAX_ROWS)
