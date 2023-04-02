@@ -8,9 +8,9 @@
 - Node.js and `npm`
 
 
-## Creating the production database
+## Preparing the production dataset
 
-If you wish to run only the sample dataset, you can skip this section and go to the "Initialize database" part.
+If you wish to run only the sample dataset, you can skip this section and go to the "Initialize the database" part.
 
 ### Download the dataset
 
