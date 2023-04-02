@@ -1,4 +1,4 @@
--- NOTE: Please replace all occurrences of "/MY/ABSOLUTE/PATH/TO/" path in the LOCAL INFILE commands to the absolute path to the data/processed directory on your system.
+-- NOTE: Please replace all occurrences of "/home/leungjch/Documents/repos/cs348project/" path in the LOCAL INFILE commands to the absolute path to the data/processed directory on your system.
 -- There is no way in MySQL to do a variable path so you must hardcode the path (https://stackoverflow.com/a/41359626)
 
 -- need to set this or else you get this error
@@ -6,22 +6,22 @@
 SET GLOBAL local_infile=1;
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/nameBasics.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/nameBasics.tsv' 
     INTO TABLE NameBasics
     IGNORE 1 LINES;
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/titleBasics.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/titleBasics.tsv' 
     INTO TABLE TitleBasics
     IGNORE 1 LINES;
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/titleRatings.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/titleRatings.tsv' 
     INTO TABLE TitleRatings
     IGNORE 1 LINES;
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/genres.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/genres.tsv' 
     INTO TABLE Genres
     IGNORE 1 LINES;
 
@@ -51,17 +51,17 @@ INSERT INTO `GenreInfo` (`genre`, `description`) VALUES
 ('Thriller', 'A thriller film is a type of film that is designed to keep the audience on the edge of their seat. It often features suspenseful and intense plotlines, and can be centered around crime, espionage, or other high-stakes situations. Thriller films can be gripping and exciting, and often explore themes of danger, fear, and the human psyche.');
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/characters.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/characters.tsv' 
     INTO TABLE Portrays
     IGNORE 1 LINES;
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/directors.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/directors.tsv' 
     INTO TABLE Directors
     IGNORE 1 LINES;
 
 LOAD DATA 
-	LOCAL INFILE '/MY/ABSOLUTE/PATH/TO/data/processed/writers.tsv' 
+	LOCAL INFILE '/home/leungjch/Documents/repos/cs348project/data/processed/writers.tsv' 
     INTO TABLE Writers
     IGNORE 1 LINES;
 

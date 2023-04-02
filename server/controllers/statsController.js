@@ -21,6 +21,20 @@ exports.getData = async function(req, res, connectionPromise) {
       y: row.num_movies
     }
   }).filter((row) => row != null);
+
+  const [actorsByPopularity, fields8] = await connection.execute(StatsSql.actorsByPopularity, []);
+  // for ApexCharts, map primaryName to x, and num_movies to y
+  // skip every other row
+  const actorsByPopularityForChart = actorsByPopularity.map((row, index) => {
+    if (index % 5 == 0) {
+      return null;
+    }
+    return {
+      x: row.name,
+      y: row.total_num_votes
+    }
+  }).filter((row) => row != null);
+
   
   const [movieRuntimeLengths, fields4] = await connection.execute(StatsSql.movieRuntimeLengths, []);
   // filter out nulls from movieRuntimeLengths
@@ -70,6 +84,7 @@ exports.getData = async function(req, res, connectionPromise) {
       "moviesPerYear": moviesPerYear,
       "moviesByGenre": filteredMoviesByGenre,
       "actorsByMovieCount": actorsByMovieCountForChart,
+      "actorsByPopularity": actorsByPopularityForChart,
       "movieRuntimeLengths": filteredMovieRuntimeLengths,
       "ratingsByYear": filteredRatingsByYear,
       "socialNetwork": {

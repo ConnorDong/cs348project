@@ -23,6 +23,20 @@ exports.actorsByMovieCount = `
     LIMIT 50;
 `
 
+exports.actorsByPopularity = `
+SELECT
+  nb.nconst,
+  nb.primaryName as name,
+  SUM(tr.numVotes) AS total_num_votes
+FROM NameBasics nb
+JOIN Portrays p ON nb.nconst = p.nconst
+JOIN TitleBasics tb ON p.tconst = tb.tconst
+JOIN TitleRatings tr ON tb.tconst = tr.tconst
+GROUP BY nb.nconst, nb.primaryName
+ORDER BY total_num_votes DESC
+LIMIT 50;
+`
+
 
 exports.movieRuntimeLengths = `
 SELECT

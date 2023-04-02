@@ -74,9 +74,13 @@ export default function Stats() {
 
             {stats.moviesByGenre ? <GenrePieChart data={stats.moviesByGenre} /> : null}
 
-            <h2>Actors that have starred in the most movies</h2>
-            {/* {stats.actorsByMovieCount ? <BarChart data={stats.actorsByMovieCount} nameKey={"name"} dataKey={"num_movies"} /> : null} */}
+            <h2>Top actors by number of votes (most popular actors)</h2>
+            {/* {stats.actorsByPopularity ? <BarChart data={stats.actorsByPopularity} nameKey={"name"} dataKey={"num_movies"} /> : null} */}
+            {stats.actorsByPopularity ? <ActorTreemap data={stats.actorsByPopularity} /> : null}
+
+            <h2>Top actors by number of portrayals</h2>
             {stats.actorsByMovieCount ? <ActorTreemap data={stats.actorsByMovieCount} /> : null}
+
 
             <h2>Distribution of movie runtime (minutes)</h2>
             {stats ? <BarChart data={stats.movieRuntimeLengths} nameKey={"runtime_range"} dataKey={"num_movies"} /> : null}
