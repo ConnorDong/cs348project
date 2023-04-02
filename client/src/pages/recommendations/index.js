@@ -1,5 +1,3 @@
-// Create recommenation page using Nextjs and React
-//
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "@/styles/Recommendation.module.css";

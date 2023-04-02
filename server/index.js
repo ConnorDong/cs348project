@@ -11,6 +11,7 @@ var GenresController = require("./controllers/genresController");
 var WatchListController = require("./controllers/watchListController");
 var RecommendationController = require("./controllers/recommendationController");
 var AdminController = require("./controllers/adminPanelController");
+var StatsController = require("./controllers/statsController");
 var TitlesSql = require("./sql/titlesSql");
 
 const PORT = 5001;
@@ -162,6 +163,11 @@ app.get("/recommendations/:userId", (req, res) => {
 // User must pass their userId as a parameter to check whether they are admin
 app.get("/admin/:userId", (req, res) => {
   AdminController.getAdminPanel(req, res, connectionPromise);
+});
+
+// Stats
+app.get("/stats", (req, res) => {
+  StatsController.getData(req, res, connectionPromise);
 });
 
 app.listen(PORT, (error) => {

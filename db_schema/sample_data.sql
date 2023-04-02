@@ -146,11 +146,12 @@ VALUES ('1', '100'), ('1', '101'), ('1', '102');
 INSERT INTO RolePermissions (roleId, permissionId)
 VALUES ('2', '100'), ('2', '101'), ('2', '102'), ('2', '103');
 
--- Assign viewer role to regular users
-INSERT INTO UserRoles (userId, roleId)
-VALUES ('bcab1d5d-e34d-487f-bc67-493335499b07', '1'),
-	   ('601876bb-8b8b-4558-8a79-e9d70ff76b46', '1'),
-       ('c67fc6f1-d219-4bcd-8921-f8117ab6169a', '1');
+-- -- Assign viewer role to regular users
+-- -- These are already done by the default role trigger so not necessary
+-- INSERT INTO UserRoles (userId, roleId)
+-- VALUES ('bcab1d5d-e34d-487f-bc67-493335499b07', '1'),
+-- 	   ('601876bb-8b8b-4558-8a79-e9d70ff76b46', '1'),
+--        ('c67fc6f1-d219-4bcd-8921-f8117ab6169a', '1');
 
 -- Assign admin role to the admin user
 INSERT INTO UserRoles (userId, roleId)

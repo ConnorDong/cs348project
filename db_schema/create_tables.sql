@@ -156,10 +156,15 @@ create table Permissions (
 create table UserRoles (
     userId varchar(255),
     roleId varchar(255),
-    primary key (userId, roleId),
-    foreign key (userId) references Users(userId),
-    foreign key (roleId) references Roles(roleId)
+    primary key (userId, roleId)
 );
+
+-- Create a trigger to assign newly registered users to Viewer role by default
+CREATE TRIGGER ai_add_viewer_role_on_registration
+AFTER INSERT ON Users
+FOR EACH ROW
+INSERT INTO UserRoles (userId, roleId)
+VALUES (NEW.userId, '1');
 
 -- RolePermission table (mapping roles to permissions)
 create table RolePermissions (

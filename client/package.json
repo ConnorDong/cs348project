@@ -11,18 +11,22 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
+    "@loadable/component": "^5.15.3",
     "@mantine/core": "^6.0.0",
     "@mantine/form": "^6.0.0",
     "@mantine/hooks": "^6.0.0",
     "@mantine/modals": "^6.0.0",
     "@mantine/next": "^6.0.0",
     "@next/font": "13.1.5",
+    "cookies-next": "^2.1.1",
     "eslint": "8.32.0",
     "eslint-config-next": "13.1.5",
     "next": "13.1.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "cookies-next": "^2.1.1",
-    "tabler-icons-react": "^1.56.0"
+    "react-force-graph": "^1.42.0",
+    "recharts": "^2.5.0",
+    "tabler-icons-react": "^1.56.0",
+    "three-spritetext": "^1.8.0"
   }
 }
