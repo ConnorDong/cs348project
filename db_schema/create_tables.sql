@@ -140,4 +140,39 @@ create table WatchListItem (
     foreign key (tconst) references TitleBasics(tconst)
 );
 
+-- ------ Tables for fancy feature: RBAC
+create table Roles (
+    roleId varchar(255) primary key,
+    name varchar(255) unique not null
+);
+
+create table Permissions (
+    permissionId varchar(255) primary key,
+    permissionName varchar(255) unique not null,
+    description varchar(255)
+);
+
+-- UserRole table (mapping users to roles)
+create table UserRoles (
+    userId varchar(255),
+    roleId varchar(255),
+    primary key (userId, roleId)
+);
+
+-- Create a trigger to assign newly registered users to Viewer role by default
+CREATE TRIGGER ai_add_viewer_role_on_registration
+AFTER INSERT ON Users
+FOR EACH ROW
+INSERT INTO UserRoles (userId, roleId)
+VALUES (NEW.userId, '1');
+
+-- RolePermission table (mapping roles to permissions)
+create table RolePermissions (
+    roleId varchar(255),
+    permissionId varchar(255),
+    primary key (roleId, permissionId),
+    foreign key (roleId) references Roles(roleId),
+    foreign key (permissionId) references Permissions(permissionId)
+);
+
 show tables;
